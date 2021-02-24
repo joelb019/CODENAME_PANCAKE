@@ -24,6 +24,10 @@ class gameScene extends Phaser.Scene {
         // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
 
+        this.asteroid = this.add.sprite(330, 100, 'asteroid');
+
+        this.asteroid.setScale(0.1)
+
         this.player = this.add.sprite(330, 350, 'earth');
 
         this.player.setScale(1);
