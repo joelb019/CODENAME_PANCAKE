@@ -3,6 +3,17 @@
     border: 3px solid green;
     font-family: "Copperplate", fantasy;
   }
+.footers {
+    width: 100%;
+    text-align: center;
+    border: 3px solid green;
+    font-family: "Copperplate", fantasy;
+    padding:  10px;
+    position: fixed;
+  }
+.footers {
+    bottom: 0;
+  }
 
 #myCanvas {
     padding: 0;
