@@ -34,7 +34,7 @@ class gameScene extends Phaser.Scene {
         
         var earth = this.physics.add.staticImage(330, 400, 'earth');
         var asteroid = this.physics.add.image(330, 100, 'asteroid');
-        var racket = this.physics.add.image(330, 200, 'racket');
+        this.racket = this.physics.add.image(330, 200, 'racket');
         
 
         this.physics.accelerateToObject(asteroid, earth, 60, 300, 300);
@@ -44,26 +44,39 @@ class gameScene extends Phaser.Scene {
 
         asteroid.setScale(0.1);
 
-        racket.setScale(0.125);
+        this.racket.setScale(0.125)
 
         // this.player = this.add.sprite(330, 350, 'earth');
 
         earth.setScale(2);
 
+        // this.cursors = this.input.keyboard.addKeys(
+        //     {up:Phaser.Input.Keyboard.KeyCodes.W,
+        //     down:Phaser.Input.Keyboard.KeyCodes.S,
+        //     left:Phaser.Input.Keyboard.KeyCodes.A,
+        //     right:Phaser.Input.Keyboard.KeyCodes.D});
+
         this.cursors = this.input.keyboard.createCursorKeys();
+
+        this.racket.setCollideWorldBounds(true);
 
     }
    
 
    update(){
+    
+    this.racket.body.setVelocityX(0);
+    this.racket.body.setVelocityY(0);
 
-    if (cursors.right.isDown)
-    {
-        racket.x += racketSpeed;
-    }
-
+    if (this.cursors.left.isDown) {
+        this.racket.setVelocityX(-150)
+      } 
+      
+    else if (this.cursors.right.isDown) {
+        this.racket.setVelocityX(150);
    }
 
+}
 }
 
 //our game configuration
