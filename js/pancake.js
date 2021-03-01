@@ -23,6 +23,8 @@ class gameScene extends Phaser.Scene {
     create() {
 
 
+
+
         // background
         let bg = this.add.sprite(0, 0, 'background');
 
@@ -36,6 +38,11 @@ class gameScene extends Phaser.Scene {
         var asteroid = this.physics.add.image(330, 100, 'asteroid');
         this.racket = this.physics.add.image(330, 200, 'racket');
         
+        this.radius = 100;
+        this.angle = 270;
+
+        this.circleCenterX = 330;
+        this.circleCenterY = 400;
 
         this.physics.accelerateToObject(asteroid, earth, 60, 300, 300);
 
@@ -65,11 +72,15 @@ class gameScene extends Phaser.Scene {
 
    update(){
     
+    
     this.racket.body.setVelocityX(0);
     this.racket.body.setVelocityY(0);
 
     if (this.cursors.left.isDown) {
-        this.racket.setVelocityX(-150)
+        // this.angle += this.racketSpeed;
+        // this.racket.setVelocityX(radius * Math.cos(angle * (Math.PI/180)) + circleCenterX);
+        // this.racket.setVelocityY(radius * Math.sin(angle * (Math.PI/180)) + circleCenterY);
+        this.racket.setVelocityX(-150);
       } 
       
     else if (this.cursors.right.isDown) {
