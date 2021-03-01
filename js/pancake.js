@@ -18,22 +18,38 @@ class gameScene extends Phaser.Scene {
 
 
     create() {
+
+
         // background
         let bg = this.add.sprite(0, 0, 'background');
 
         // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
 
-        this.asteroid = this.add.sprite(330, 100, 'asteroid');
+        // var circle = new Phaser.Geom.Circle(100, 100, 15);
+        // graphics.fillCircleShape(circle);
+        var earth = this.physics.add.staticImage(330, 350, 'earth');
+        var asteroid = this.physics.add.image(330, 100, 'asteroid');
 
-        this.asteroid.setScale(0.1)
+        
+        
 
-        this.player = this.add.sprite(330, 350, 'earth');
+        this.physics.accelerateToObject(asteroid, earth, 60, 300, 300);
 
-        this.player.setScale(1);
-   }
+        
+        // this.asteroid = this.add.sprite(330, 100, 'asteroid');
+
+        asteroid.setScale(0.1);
+
+        // this.player = this.add.sprite(330, 350, 'earth');
+
+        earth.setScale(1);
+
+    }
+   
 
    update(){
+
 
    }
 
