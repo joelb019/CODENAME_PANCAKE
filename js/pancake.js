@@ -28,7 +28,7 @@ class gameScene extends Phaser.Scene {
 
         // var circle = new Phaser.Geom.Circle(100, 100, 15);
         // graphics.fillCircleShape(circle);
-        var earth = this.physics.add.staticImage(330, 350, 'earth');
+        var earth = this.physics.add.staticImage(330, 400, 'earth');
         var asteroid = this.physics.add.image(330, 100, 'asteroid');
 
         
@@ -43,7 +43,7 @@ class gameScene extends Phaser.Scene {
 
         // this.player = this.add.sprite(330, 350, 'earth');
 
-        earth.setScale(1);
+        earth.setScale(2);
 
     }
    
