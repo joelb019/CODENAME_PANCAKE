@@ -15,16 +15,19 @@ class gameScene extends Phaser.Scene{
     }
 
 
-preload(){
+    preload(){
+        this.load.image('earth', 'img/earthPlaceholder.png');
+        this.load.image('space', 'img/bgPlaceholder.jpg');
+    }
 
-}
+    create(){
+        this.add.image(400, 300, 'earth');
+        this.add.image(400, 300, 'space');
+    }
 
-create(){
-
-}
-
-update(){
- }
+    update(){
+        
+    }
 }
 
 // our game's configuration
