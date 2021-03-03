@@ -8,7 +8,6 @@ class gameScene extends Phaser.Scene {
     });
 
     this.cursor = new Phaser.Math.Vector2();
-
     this.racketSpeed = 0.1;
     }
 
@@ -30,12 +29,12 @@ class gameScene extends Phaser.Scene {
 
         // var circle = new Phaser.Geom.Circle(100, 100, 15);
         // graphics.fillCircleShape(circle);
-        var graphics = this.add.graphics({ fillStyle: { color: 0xaa0000} });
-        this.pointerCircle = new Phaser.Geom.Circle(100, 100, 60);
-        this.earthhitbox = this.physics.add.image(graphics.fillCircle(330,400,170,170));
+        this.graphics = this.add.graphics({ fillStyle: { color: 0xaa0000} });
+        this.earthhitbox = this.physics.add.image(this.graphics.fillCircle(330,400,170,170));
         this.earth = this.physics.add.staticImage(330, 400, 'earth');
         this.asteroid = this.physics.add.image(400, 50, 'asteroid');
         this.racket = this.physics.add.image(330, 200, 'racket');
+        this.pointerCircle = new Phaser.Geom.Circle(100,100, 20);
         
 
         // var earthhitbox = gameScene.add.ellipse(100,100,50,50);
@@ -76,7 +75,7 @@ class gameScene extends Phaser.Scene {
 
    update(){
     
-    
+    this.graphics.strokeCircleShape(this.pointerCircle);
     this.racket.body.setVelocityX(0);
     this.racket.body.setVelocityY(0);
 
@@ -94,6 +93,9 @@ class gameScene extends Phaser.Scene {
       
     else if (this.cursors.right.isDown) {
         this.racket.setVelocityX(150);
+
+    
+
    }
 
    
