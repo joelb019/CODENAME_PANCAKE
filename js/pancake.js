@@ -7,6 +7,7 @@ class titleScene extends Phaser.Scene{
     preload () {
         this.load.image('background_button', 'img/StartButton.jpg')
     }
+    //askdoaskdosa
     create () {
         let background = this.add.sprite(0, 0, 'background_button');
         background.setOrigin(0,0);
