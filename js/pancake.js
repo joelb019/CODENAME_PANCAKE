@@ -22,9 +22,6 @@ class gameScene extends Phaser.Scene {
 
     create() {
 
-
-
-
         // background
         let bg = this.add.sprite(0, 0, 'background');
 
@@ -33,10 +30,17 @@ class gameScene extends Phaser.Scene {
 
         // var circle = new Phaser.Geom.Circle(100, 100, 15);
         // graphics.fillCircleShape(circle);
-        
-        var earth = this.physics.add.staticImage(330, 400, 'earth');
-        var asteroid = this.physics.add.image(330, 100, 'asteroid');
+        var graphics = this.add.graphics({ fillStyle: { color: 0xaa0000} });
+        this.pointerCircle = new Phaser.Geom.Circle(100, 100, 60);
+        this.earthhitbox = this.physics.add.image(graphics.fillCircle(330,400,170,170));
+        this.earth = this.physics.add.staticImage(330, 400, 'earth');
+        this.asteroid = this.physics.add.image(400, 50, 'asteroid');
         this.racket = this.physics.add.image(330, 200, 'racket');
+        
+
+        // var earthhitbox = gameScene.add.ellipse(100,100,50,50);
+
+       
         
         this.radius = 100;
         this.angle = 270;
@@ -44,18 +48,18 @@ class gameScene extends Phaser.Scene {
         this.circleCenterX = 330;
         this.circleCenterY = 400;
 
-        this.physics.accelerateToObject(asteroid, earth, 60, 300, 300);
+        this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
 
         
         // this.asteroid = this.add.sprite(330, 100, 'asteroid');
 
-        asteroid.setScale(0.1);
+        this.asteroid.setScale(0.1);
 
         this.racket.setScale(0.125)
 
         // this.player = this.add.sprite(330, 350, 'earth');
 
-        earth.setScale(2);
+        this.earth.setScale(2);
 
         // this.cursors = this.input.keyboard.addKeys(
         //     {up:Phaser.Input.Keyboard.KeyCodes.W,
@@ -76,6 +80,11 @@ class gameScene extends Phaser.Scene {
     this.racket.body.setVelocityX(0);
     this.racket.body.setVelocityY(0);
 
+//     if (Phaser.Geom.Intersects.CircletoCircle(this.asteroid.getBounds(), this.earthhitbox.getBounds())) {
+//         this.asteroid.y = 1000;
+//         console.log("test");
+//    }
+
     if (this.cursors.left.isDown) {
         // this.angle += this.racketSpeed;
         // this.racket.setVelocityX(radius * Math.cos(angle * (Math.PI/180)) + circleCenterX);
@@ -86,6 +95,9 @@ class gameScene extends Phaser.Scene {
     else if (this.cursors.right.isDown) {
         this.racket.setVelocityX(150);
    }
+
+   
+   
 
 }
 }
