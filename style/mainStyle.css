@@ -1,20 +1,21 @@
-body {
-  background-color: dimgrey;
-}
+.headers {
+    text-align: center;
+    border: 3px solid green;
+    font-family: "Copperplate", fantasy;
+  }
+.footers {
+    width: 100%;
+    text-align: center;
+    border: 3px solid green;
+    font-family: "Copperplate", fantasy;
+    padding:  10px;
+    position: fixed;
+  }
+.footers {
+    bottom: 0;
+  }
 
-.headingDivs {
-  text-align: center;
-  border: 7px solid navy;
-  border-radius: 25px;
-  background-color: gold;
-  font-family: "Copperplate", fantasy;
-}
-
-.headings {
-  padding-top: 0px;
-}
-
-.mainCanvas {
+#myCanvas {
     padding: 0;
     margin: auto;
     display: block;
