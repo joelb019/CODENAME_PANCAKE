@@ -10,6 +10,7 @@ class titleScene extends Phaser.Scene{
     create () {
         let background = this.add.sprite(0, 0, 'background_button');
         background.setOrigin(0,0);
+    
     }
 }
 
