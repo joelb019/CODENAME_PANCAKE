@@ -9,7 +9,8 @@ class gameScene extends Phaser.Scene {
 
     this.cursor = new Phaser.Math.Vector2();
     this.racketSpeed = 0.1;
-    var circle;
+    this.is_hit = 0;
+
     }
 
     preload(){
@@ -28,50 +29,27 @@ class gameScene extends Phaser.Scene {
         // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
 
-        // var circle = new Phaser.Geom.Circle(100, 100, 15);
-        // graphics.fillCircleShape(circle);
         this.graphics = this.add.graphics({ fillStyle: { color: 0xaa0000} });
         this.earthcircle = new Phaser.Geom.Circle(330, 400, 160);
-        // this.earthhitbox = this.physics.add.image(this.graphics.fillCircle(330,400,170,170));
         this.earth = this.physics.add.staticImage(330, 400, 'earth');
         this.asteroid = this.physics.add.image(400, 50, 'asteroid');
         this.asteroidcircle = new Phaser.Geom.Circle(this.asteroid.x, this.asteroid.y, 30);
         this.racket = this.physics.add.image(330, 200, 'racket');
-        
-        
-
-        // var earthhitbox = gameScene.add.ellipse(100,100,50,50);
-
-       
-        
-        // this.radius = 100;
-        // this.angle = 270;
-
-        // this.circleCenterX = 330;
-        // this.circleCenterY = 400;
+        this.racketcircle = new Phaser.Geom.Circle(this.racket.x - 45, this.racket.y, 20);
 
         this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
-
-        
-        // this.asteroid = this.add.sprite(330, 100, 'asteroid');
-
+    
         this.asteroid.setScale(0.1);
 
         this.racket.setScale(0.125)
 
-        // this.player = this.add.sprite(330, 350, 'earth');
-
         this.earth.setScale(2);
-
-        // this.cursors = this.input.keyboard.addKeys(
-        //     {up:Phaser.Input.Keyboard.KeyCodes.W,
-        //     down:Phaser.Input.Keyboard.KeyCodes.S,
-        //     left:Phaser.Input.Keyboard.KeyCodes.A,
-        //     right:Phaser.Input.Keyboard.KeyCodes.D});
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this.racket.setCollideWorldBounds(true);
+
+        this.asteroid.setCollideWorldBounds(true);
 
     }
    
@@ -80,18 +58,31 @@ class gameScene extends Phaser.Scene {
     this.graphics.clear();
     this.graphics.fillCircleShape(this.earthcircle);
     this.graphics.fillCircleShape(this.asteroidcircle);
+    this.graphics.fillCircleShape(this.racketcircle);
     
     this.asteroidcircle.x = this.asteroid.x;
     this.asteroidcircle.y = this.asteroid.y;
+
+    this.racketcircle.x = this.racket.x - 45;
+    this.racketcircle.y = this.racket.y;
 
     // this.graphics.strokeCircleShape(this.circle);
     this.racket.body.setVelocityX(0);
     this.racket.body.setVelocityY(0);
 
     if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, this.asteroidcircle)) {
-        this.asteroid.y = 1000;
-        console.log("test");
-   }
+        this.asteroid.destroy();
+        this.asteroidcircle.y = 1000;
+        // this.asteroid.setVelocityX(0);
+        // this.asteroid.setVelocityY(0);
+        this.is_hit = 1;
+
+        }
+
+    if (Phaser.Geom.Intersects.CircleToCircle(this.racketcircle, this.asteroidcircle)) {
+    this.asteroid.setVelocityY(-150);
+
+    }
 
     if (this.cursors.left.isDown) {
         // this.angle += this.racketSpeed;
@@ -107,9 +98,10 @@ class gameScene extends Phaser.Scene {
 
    }
 
-   
-   
+   if(this.is_hit == 0){
+   this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
 
+   }
 }
 }
 
