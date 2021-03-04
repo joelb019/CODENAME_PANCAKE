@@ -35,7 +35,7 @@ class gameScene extends Phaser.Scene {
         this.asteroid = this.physics.add.image(400, 50, 'asteroid');
         this.asteroidcircle = new Phaser.Geom.Circle(this.asteroid.x, this.asteroid.y, 30);
         this.racket = this.physics.add.image(330, 200, 'racket');
-        this.racketcircle = new Phaser.Geom.Circle(this.racket.x - 45, this.racket.y, 20);
+        this.racketcircle = new Phaser.Geom.Circle(this.racket.x + 40, this.racket.y, 10);
 
         this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
     
@@ -63,7 +63,7 @@ class gameScene extends Phaser.Scene {
     this.asteroidcircle.x = this.asteroid.x;
     this.asteroidcircle.y = this.asteroid.y;
 
-    this.racketcircle.x = this.racket.x - 45;
+    this.racketcircle.x = this.racket.x + 40;
     this.racketcircle.y = this.racket.y;
 
     // this.graphics.strokeCircleShape(this.circle);
