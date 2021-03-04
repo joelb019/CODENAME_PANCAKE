@@ -9,6 +9,7 @@ class gameScene extends Phaser.Scene {
 
     this.cursor = new Phaser.Math.Vector2();
     this.racketSpeed = 0.1;
+    var circle;
     }
 
     preload(){
@@ -30,22 +31,24 @@ class gameScene extends Phaser.Scene {
         // var circle = new Phaser.Geom.Circle(100, 100, 15);
         // graphics.fillCircleShape(circle);
         this.graphics = this.add.graphics({ fillStyle: { color: 0xaa0000} });
-        this.earthhitbox = this.physics.add.image(this.graphics.fillCircle(330,400,170,170));
+        this.earthcircle = new Phaser.Geom.Circle(330, 400, 160);
+        // this.earthhitbox = this.physics.add.image(this.graphics.fillCircle(330,400,170,170));
         this.earth = this.physics.add.staticImage(330, 400, 'earth');
         this.asteroid = this.physics.add.image(400, 50, 'asteroid');
+        this.asteroidcircle = new Phaser.Geom.Circle(this.asteroid.x, this.asteroid.y, 30);
         this.racket = this.physics.add.image(330, 200, 'racket');
-        this.pointerCircle = new Phaser.Geom.Circle(100,100, 20);
+        
         
 
         // var earthhitbox = gameScene.add.ellipse(100,100,50,50);
 
        
         
-        this.radius = 100;
-        this.angle = 270;
+        // this.radius = 100;
+        // this.angle = 270;
 
-        this.circleCenterX = 330;
-        this.circleCenterY = 400;
+        // this.circleCenterX = 330;
+        // this.circleCenterY = 400;
 
         this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
 
@@ -74,15 +77,21 @@ class gameScene extends Phaser.Scene {
    
 
    update(){
+    this.graphics.clear();
+    this.graphics.fillCircleShape(this.earthcircle);
+    this.graphics.fillCircleShape(this.asteroidcircle);
     
-    this.graphics.strokeCircleShape(this.pointerCircle);
+    this.asteroidcircle.x = this.asteroid.x;
+    this.asteroidcircle.y = this.asteroid.y;
+
+    // this.graphics.strokeCircleShape(this.circle);
     this.racket.body.setVelocityX(0);
     this.racket.body.setVelocityY(0);
 
-//     if (Phaser.Geom.Intersects.CircletoCircle(this.asteroid.getBounds(), this.earthhitbox.getBounds())) {
-//         this.asteroid.y = 1000;
-//         console.log("test");
-//    }
+    if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, this.asteroidcircle)) {
+        this.asteroid.y = 1000;
+        console.log("test");
+   }
 
     if (this.cursors.left.isDown) {
         // this.angle += this.racketSpeed;
