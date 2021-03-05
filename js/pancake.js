@@ -113,7 +113,7 @@ class gameScene extends Phaser.Scene {
             }
             if(this.health == 0) {
                 //switch scene
-                this.scene.start('gameOverScene');
+                this.scene.start('endMenu');
             }
         }
 
@@ -138,18 +138,46 @@ class gameScene extends Phaser.Scene {
     }
 }
 
-class gameOverScene extends Phaser.Scene {
-    preload() {
-        
-    }
+class endMenu extends Phaser.Scene {
+  constructor() {
+      super({key: 'endMenu'});
+  }
+  
+  preload() {
+    this.health = 5;
+    this.load.image('background', 'img/background.jpg');
+  }
 
-    create() {
+  create() {
+    let background = this.add.sprite(35, 0, 'background');
+    background.setOrigin(0, 0);
 
-    }
+    this.add.text(45, 50, 'GAME OVER', { font: '50px Arial', align: 'center' });
 
-    update() {
+    this.clickButton = this.add.text(260, 200, 'PLAY AGAIN!', { fill: '#0f0' })
+      .setInteractive()
+      .on('pointerover', () => this.enterButtonHoverState() )
+      .on('pointerout', () => this.enterButtonRestState() )
+      .on('pointerdown', () => this.enterButtonActiveState() )
+      .on('pointerup', () => {
+        this.enterButtonHoverState();
+        this.scene.start('gameScene');
+        console.log('Change Scene to game');
+    });
 
-    }
+  }
+
+  enterButtonHoverState() {
+    this.clickButton.setStyle({ fill: '#ff0' });
+  }
+
+  enterButtonRestState() {
+    this.clickButton.setStyle({ fill: '#0f0' });
+  }
+
+  enterButtonActiveState() {
+    this.clickButton.setStyle({ fill: '#0ff' });
+  }
 }
 
 //our game configuration
@@ -157,7 +185,7 @@ let config = {
     type: Phaser.AUTO, //Phaser will decide how to render our game (WebGL or Canvas)
     width: 640, // game width
     height: 360, // game height
-    scene: gameScene, // our newly created scene
+    scene: [gameScene,endMenu], // our newly created scene
     parent: 'main-game',
     physics: {
         default: 'arcade',
