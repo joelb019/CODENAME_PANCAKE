@@ -13,12 +13,33 @@ class gameScene extends Phaser.Scene {
         this.health = 5;
     }
 
+    makeBar(x, y,color) {
+        //draw the bar
+        let bar = this.add.graphics();
+
+        //color the bar
+        bar.fillStyle(color, 1);
+
+        //fill the bar with a rectangle
+        bar.fillRect(0, 0, 200, 30);
+        
+        //position the bar
+        bar.x = x;
+        bar.y = y;
+
+        //return the bar
+        return bar;
+    }
+    setValue(bar,percentage) {
+        //scale the bar
+        bar.scaleX = percentage/100;
+    }
+
     preload(){
         this.load.image('background', 'img/background.jpg');
         this.load.image('earth', 'img/earth.png');
         this.load.image('asteroid', 'img/asteroid.png');
         this.load.image('racket', 'img/tennis.png');
-        this.load.image('heart', 'img/heart.png');
     }
 
 
@@ -52,10 +73,11 @@ class gameScene extends Phaser.Scene {
 
         this.asteroid.setCollideWorldBounds(true);
 
-        this.heartX = 0;
+        this.healthBar = this.makeBar(10 , 320, 0xe74c3c);
+        this.setValue(this.healthBar, this.health*20);
 
-
-
+        
+        this.add.text(10, 295, 'Health');
     }
    
 
@@ -85,6 +107,8 @@ class gameScene extends Phaser.Scene {
             if(this.is_hit == 1) {
                 this.health = this.health - 1;
                 console.log("health: " + this.health);
+                //let healthBar=this.makeBar(140,200,0xe74c3c);
+                this.setValue(this.healthBar, this.health*20);
                 this.is_hit = 0;
             }
             if(this.health == 0) {
