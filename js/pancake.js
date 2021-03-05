@@ -57,18 +57,64 @@ class gameScene extends Phaser.Scene {
         let background = this.add.sprite(0, 0, 'background');
         background.setOrigin(0, 0);
 
-        let planet = this.add.sprite(0, 0, 'planet');
-        planet.setOrigin(0, 330);
-
-        this.add.text(100, 100, 'game');
+        this.clickButton = this.add.text(260, 200, 'game', { fill: '#0f0' })
+        .setInteractive()
+        .on('pointerup', () => {
+          this.scene.start('endMenu');
+          console.log('Change Scene to menu');
+      });
     }
 }
+
+class endMenu extends Phaser.Scene {
+  constructor() {
+      super({key: 'endMenu'});
+  }
+
+  preload() {
+    this.load.image('background', 'img/bgPlaceholder.jpg');
+    this.load.image('planet', 'img/earthPlaceholder.png');
+  }
+
+  create() {
+    let background = this.add.sprite(35, 0, 'background');
+    background.setOrigin(0, 0);
+
+    this.add.text(45, 50, 'GAME OVER', { font: '50px Arial', align: 'center' });
+
+    this.clickButton = this.add.text(260, 200, 'PLAY AGAIN!', { fill: '#0f0' })
+      .setInteractive()
+      .on('pointerover', () => this.enterButtonHoverState() )
+      .on('pointerout', () => this.enterButtonRestState() )
+      .on('pointerdown', () => this.enterButtonActiveState() )
+      .on('pointerup', () => {
+        this.enterButtonHoverState();
+        this.scene.start('mainMenu');
+        console.log('Change Scene to menu');
+    });
+
+  }
+
+  enterButtonHoverState() {
+    this.clickButton.setStyle({ fill: '#ff0' });
+  }
+
+  enterButtonRestState() {
+    this.clickButton.setStyle({ fill: '#0f0' });
+  }
+
+  enterButtonActiveState() {
+    this.clickButton.setStyle({ fill: '#0ff' });
+  }
+}
+
+
 
 let config = {
     type: Phaser.AUTO, //Phaser will decide how to render our game (WebGL or Canvas)
     width: 640, // game width
     height: 360, // game height
-    scene: [mainMenu, gameScene], 
+    scene: [mainMenu, gameScene, endMenu], 
     parent: 'main-game',
     physics: {
         default: 'arcade',
