@@ -1,16 +1,16 @@
 //This is our awful game
 
 class gameScene extends Phaser.Scene {
-  constructor(){
-    super({
-        key: 'gameScene',
-        active: true
-    });
+    constructor(){
+        super({
+            key: 'gameScene',
+            active: true
+        });
 
-    this.cursor = new Phaser.Math.Vector2();
-    this.racketSpeed = 0.1;
-    this.is_hit = 0;
-
+        this.cursor = new Phaser.Math.Vector2();
+        this.racketSpeed = 0.1;
+        this.is_hit = 0;
+        this.health = 5;
     }
 
     preload(){
@@ -18,6 +18,7 @@ class gameScene extends Phaser.Scene {
         this.load.image('earth', 'img/earth.png');
         this.load.image('asteroid', 'img/asteroid.png');
         this.load.image('racket', 'img/tennis.png');
+        this.load.image('heart', 'img/heart.png');
     }
 
 
@@ -51,58 +52,80 @@ class gameScene extends Phaser.Scene {
 
         this.asteroid.setCollideWorldBounds(true);
 
+        this.heartX = 0;
+
+
+
     }
    
 
-   update(){
-    this.graphics.clear();
-    this.graphics.fillCircleShape(this.earthcircle);
-    this.graphics.fillCircleShape(this.asteroidcircle);
-    this.graphics.fillCircleShape(this.racketcircle);
-    
-    this.asteroidcircle.x = this.asteroid.x;
-    this.asteroidcircle.y = this.asteroid.y;
+    update(){
+        this.graphics.clear();
+        this.graphics.fillCircleShape(this.earthcircle);
+        this.graphics.fillCircleShape(this.asteroidcircle);
+        this.graphics.fillCircleShape(this.racketcircle);
+        
+        this.asteroidcircle.x = this.asteroid.x;
+        this.asteroidcircle.y = this.asteroid.y;
 
-    this.racketcircle.x = this.racket.x + 40;
-    this.racketcircle.y = this.racket.y;
+        this.racketcircle.x = this.racket.x + 40;
+        this.racketcircle.y = this.racket.y;
 
-    // this.graphics.strokeCircleShape(this.circle);
-    this.racket.body.setVelocityX(0);
-    this.racket.body.setVelocityY(0);
+        // this.graphics.strokeCircleShape(this.circle);
+        this.racket.body.setVelocityX(0);
+        this.racket.body.setVelocityY(0);
 
-    if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, this.asteroidcircle)) {
-        this.asteroid.destroy();
-        this.asteroidcircle.y = 1000;
-        // this.asteroid.setVelocityX(0);
-        // this.asteroid.setVelocityY(0);
-        this.is_hit = 1;
-
+        if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, this.asteroidcircle)) {
+            // this.asteroid.destroy();
+            this.asteroidcircle.y = 0;
+            this.asteroid.y = 0;
+            // this.asteroid.setVelocityX(0);
+            // this.asteroid.setVelocityY(0);
+            this.is_hit = 1;
+            if(this.is_hit == 1) {
+                this.health = this.health - 1;
+                console.log("health: " + this.health);
+                this.is_hit = 0;
+            }
+            if(this.health == 0) {
+                //switch scene
+                this.scene.start('gameOverScene');
+            }
         }
 
-    if (Phaser.Geom.Intersects.CircleToCircle(this.racketcircle, this.asteroidcircle)) {
-    this.asteroid.setVelocityY(-150);
+        if (Phaser.Geom.Intersects.CircleToCircle(this.racketcircle, this.asteroidcircle)) {
+            this.asteroid.setVelocityY(-150);
+        }
+
+        if (this.cursors.left.isDown) {
+            // this.angle += this.racketSpeed;
+            // this.racket.setVelocityX(radius * Math.cos(angle * (Math.PI/180)) + circleCenterX);
+            // this.racket.setVelocityY(radius * Math.sin(angle * (Math.PI/180)) + circleCenterY);
+            this.racket.setVelocityX(-150);
+        } 
+        
+        else if (this.cursors.right.isDown) {
+            this.racket.setVelocityX(150);
+        }
+
+        if(this.is_hit == 0){
+            this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
+        }
+    }
+}
+
+class gameOverScene extends Phaser.Scene {
+    preload() {
+        
+    }
+
+    create() {
 
     }
 
-    if (this.cursors.left.isDown) {
-        // this.angle += this.racketSpeed;
-        // this.racket.setVelocityX(radius * Math.cos(angle * (Math.PI/180)) + circleCenterX);
-        // this.racket.setVelocityY(radius * Math.sin(angle * (Math.PI/180)) + circleCenterY);
-        this.racket.setVelocityX(-150);
-      } 
-      
-    else if (this.cursors.right.isDown) {
-        this.racket.setVelocityX(150);
+    update() {
 
-    
-
-   }
-
-   if(this.is_hit == 0){
-   this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
-
-   }
-}
+    }
 }
 
 //our game configuration
@@ -118,7 +141,7 @@ let config = {
             gravity: false
         }
     }
-  };
+};
   
   // create the game, and pass it the configuration
   let game = new Phaser.Game(config);
