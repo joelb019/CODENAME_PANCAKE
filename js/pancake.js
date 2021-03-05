@@ -73,6 +73,8 @@ class gameScene extends Phaser.Scene {
 
         this.asteroid.setCollideWorldBounds(true);
 
+        this.health = 5;
+
         this.healthBar = this.makeBar(10 , 320, 0xe74c3c);
         this.setValue(this.healthBar, this.health*20);
 
@@ -144,7 +146,6 @@ class endMenu extends Phaser.Scene {
   }
   
   preload() {
-    this.health = 5;
     this.load.image('background', 'img/background.jpg');
   }
 
