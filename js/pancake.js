@@ -1,10 +1,57 @@
 //This is our awful game
 
+class titleScene extends Phaser.Scene {
+    constructor() {
+        super({
+            key: 'titleScene',
+            active: true
+        });
+    }
+
+    preload() {
+        this.load.image('background', 'img/background.jpg');
+      }
+    
+      create() {
+            // background
+            let bg = this.add.sprite(0, 0, 'background');
+
+            // change origin to the top-left of the sprite
+        bg.setOrigin(0, 0);
+    
+        this.add.text(45, 50, 'CODENAME: PANCAKE', { font: '50px Arial', align: 'center' });
+    
+        this.clickButton = this.add.text(260, 200, 'START!', { fill: '#0f0' })
+          .setInteractive()
+          .on('pointerover', () => this.enterButtonHoverState() )
+          .on('pointerout', () => this.enterButtonRestState() )
+          .on('pointerdown', () => this.enterButtonActiveState() )
+          .on('pointerup', () => {
+            this.enterButtonHoverState();
+            this.scene.start('gameScene');
+            console.log('Change Scene to game');
+        });
+    
+      }
+    
+      enterButtonHoverState() {
+        this.clickButton.setStyle({ fill: '#ff0' });
+      }
+    
+      enterButtonRestState() {
+        this.clickButton.setStyle({ fill: '#0f0' });
+      }
+    
+      enterButtonActiveState() {
+        this.clickButton.setStyle({ fill: '#0ff' });
+      }
+
+}
+
 class gameScene extends Phaser.Scene {
     constructor(){
         super({
             key: 'gameScene',
-            active: true
         });
 
         this.cursor = new Phaser.Math.Vector2();
@@ -141,17 +188,20 @@ class gameScene extends Phaser.Scene {
 }
 
 class endMenu extends Phaser.Scene {
-  constructor() {
-      super({key: 'endMenu'});
-  }
+    constructor() {
+        super({key: 'endMenu'});
+    }
   
-  preload() {
-    this.load.image('background', 'img/background.jpg');
-  }
+    preload() {
+        this.load.image('background', 'img/background.jpg');
+    }
 
-  create() {
-    let background = this.add.sprite(35, 0, 'background');
-    background.setOrigin(0, 0);
+    create() {
+        // background
+        let bg = this.add.sprite(0, 0, 'background');
+
+        // change origin to the top-left of the sprite
+        bg.setOrigin(0, 0);
 
     this.add.text(45, 50, 'GAME OVER', { font: '50px Arial', align: 'center' });
 
@@ -166,19 +216,19 @@ class endMenu extends Phaser.Scene {
         console.log('Change Scene to game');
     });
 
-  }
+    }
 
-  enterButtonHoverState() {
-    this.clickButton.setStyle({ fill: '#ff0' });
-  }
+    enterButtonHoverState() {
+        this.clickButton.setStyle({ fill: '#ff0' });
+    }
 
-  enterButtonRestState() {
-    this.clickButton.setStyle({ fill: '#0f0' });
-  }
+    enterButtonRestState() {
+        this.clickButton.setStyle({ fill: '#0f0' });
+    }
 
-  enterButtonActiveState() {
-    this.clickButton.setStyle({ fill: '#0ff' });
-  }
+    enterButtonActiveState() {
+        this.clickButton.setStyle({ fill: '#0ff' });
+    }
 }
 
 //our game configuration
@@ -186,7 +236,7 @@ let config = {
     type: Phaser.AUTO, //Phaser will decide how to render our game (WebGL or Canvas)
     width: 640, // game width
     height: 360, // game height
-    scene: [gameScene,endMenu], // our newly created scene
+    scene: [titleScene, gameScene, endMenu], // our newly created scene
     parent: 'main-game',
     physics: {
         default: 'arcade',
@@ -196,6 +246,6 @@ let config = {
     }
 };
   
-  // create the game, and pass it the configuration
-  let game = new Phaser.Game(config);
+// create the game, and pass it the configuration
+let game = new Phaser.Game(config);
 
