@@ -58,7 +58,6 @@ class gameScene extends Phaser.Scene {
         this.racketSpeed = 0.1;
         this.is_hit = 0;
         this.health = 5;
-        this.score = 0;
     }
 
     makeBar(x, y,color) {
@@ -128,8 +127,6 @@ class gameScene extends Phaser.Scene {
 
         
         this.add.text(10, 295, 'Health');
-
-        this.add.text(10, 10, 'Score : ' + this.score);
     }
    
 
@@ -148,7 +145,6 @@ class gameScene extends Phaser.Scene {
         // this.graphics.strokeCircleShape(this.circle);
         this.racket.body.setVelocityX(0);
         this.racket.body.setVelocityY(0);
-        // console.log(this.racket.x)
 
         if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, this.asteroidcircle)) {
             // this.asteroid.destroy();
@@ -171,38 +167,18 @@ class gameScene extends Phaser.Scene {
         }
 
         if (Phaser.Geom.Intersects.CircleToCircle(this.racketcircle, this.asteroidcircle)) {
-            this.add.text(10, 10, 'Score : ' + this.score);
-            this.score += 5;
             this.asteroid.setVelocityY(-150);
-            
         }
 
-
-        if (this.cursors.left.isDown && this.racket.x>330) {    
+        if (this.cursors.left.isDown) {
             // this.angle += this.racketSpeed;
             // this.racket.setVelocityX(radius * Math.cos(angle * (Math.PI/180)) + circleCenterX);
             // this.racket.setVelocityY(radius * Math.sin(angle * (Math.PI/180)) + circleCenterY);
-            
-                this.racket.setVelocityX(-150);
-                this.racket.setVelocityY(-150);
-                console.log("in the zone");
-        } else if(this.cursors.left.isDown){ 
             this.racket.setVelocityX(-150);
-            this.racket.setVelocityY(150);
-            console.log("not in the zone");
-           }
-           
-    
+        } 
         
-        if (this.cursors.right.isDown && this.racket.x>330) {
-            
-                this.racket.setVelocityX(150);
-                this.racket.setVelocityY(150);
-                console.log("in the zone"); 
-        } else if (this.cursors.right.isDown){
+        else if (this.cursors.right.isDown) {
             this.racket.setVelocityX(150);
-            this.racket.setVelocityY(-150);
-            console.log("not in the zone");
         }
 
         if(this.is_hit == 0){
