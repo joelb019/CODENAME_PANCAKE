@@ -14,13 +14,9 @@ body {
   padding-top: 0px;
 }
 
-.container {
-  display: inline-block;
-}
-
-/* .mainCanvas {
+.mainCanvas {
   padding: 5px;
   margin: auto;
   display: block;
   width: 640px;
-} */
+}
