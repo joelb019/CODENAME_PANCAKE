@@ -11,6 +11,7 @@ class gameScene extends Phaser.Scene {
         this.racketSpeed = 0.1;
         this.is_hit = 0;
         this.health = 5;
+        this.score = 0;
     }
 
     makeBar(x, y,color) {
@@ -78,6 +79,8 @@ class gameScene extends Phaser.Scene {
 
         
         this.add.text(10, 295, 'Health');
+
+        this.add.text(10, 10, 'Score : ' + this.score);
     }
    
 
@@ -118,7 +121,10 @@ class gameScene extends Phaser.Scene {
         }
 
         if (Phaser.Geom.Intersects.CircleToCircle(this.racketcircle, this.asteroidcircle)) {
+            this.add.text(10, 10, 'Score : ' + this.score);
+            this.score += 5;
             this.asteroid.setVelocityY(-150);
+            
         }
 
         if (this.cursors.left.isDown) {
