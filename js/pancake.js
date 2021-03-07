@@ -1,10 +1,57 @@
 //This is our awful game
 
+class titleScene extends Phaser.Scene {
+    constructor() {
+        super({
+            key: 'titleScene',
+            active: true
+        });
+    }
+
+    preload() {
+        this.load.image('background', 'img/background.jpg');
+      }
+    
+      create() {
+            // background
+            let bg = this.add.sprite(0, 0, 'background');
+
+            // change origin to the top-left of the sprite
+        bg.setOrigin(0, 0);
+    
+        this.add.text(45, 50, 'CODENAME: PANCAKE', { font: '50px Arial', align: 'center' });
+    
+        this.clickButton = this.add.text(260, 200, 'START!', { fill: '#0f0' })
+          .setInteractive()
+          .on('pointerover', () => this.enterButtonHoverState() )
+          .on('pointerout', () => this.enterButtonRestState() )
+          .on('pointerdown', () => this.enterButtonActiveState() )
+          .on('pointerup', () => {
+            this.enterButtonHoverState();
+            this.scene.start('gameScene');
+            console.log('Change Scene to game');
+        });
+    
+      }
+    
+      enterButtonHoverState() {
+        this.clickButton.setStyle({ fill: '#ff0' });
+      }
+    
+      enterButtonRestState() {
+        this.clickButton.setStyle({ fill: '#0f0' });
+      }
+    
+      enterButtonActiveState() {
+        this.clickButton.setStyle({ fill: '#0ff' });
+      }
+
+}
+
 class gameScene extends Phaser.Scene {
     constructor(){
         super({
             key: 'gameScene',
-            active: true
         });
 
         this.cursor = new Phaser.Math.Vector2();
@@ -74,6 +121,8 @@ class gameScene extends Phaser.Scene {
 
         this.asteroid.setCollideWorldBounds(true);
 
+        this.health = 5;
+
         this.healthBar = this.makeBar(10 , 320, 0xe74c3c);
         this.setValue(this.healthBar, this.health*20);
 
@@ -99,6 +148,7 @@ class gameScene extends Phaser.Scene {
         // this.graphics.strokeCircleShape(this.circle);
         this.racket.body.setVelocityX(0);
         this.racket.body.setVelocityY(0);
+        // console.log(this.racket.x)
 
         if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, this.asteroidcircle)) {
             // this.asteroid.destroy();
@@ -116,7 +166,7 @@ class gameScene extends Phaser.Scene {
             }
             if(this.health == 0) {
                 //switch scene
-                this.scene.start('gameOverScene');
+                this.scene.start('endMenu');
             }
         }
 
@@ -127,15 +177,32 @@ class gameScene extends Phaser.Scene {
             
         }
 
-        if (this.cursors.left.isDown) {
+
+        if (this.cursors.left.isDown && this.racket.x>330) {    
             // this.angle += this.racketSpeed;
             // this.racket.setVelocityX(radius * Math.cos(angle * (Math.PI/180)) + circleCenterX);
             // this.racket.setVelocityY(radius * Math.sin(angle * (Math.PI/180)) + circleCenterY);
+            
+                this.racket.setVelocityX(-150);
+                this.racket.setVelocityY(-150);
+                console.log("in the zone");
+        } else if(this.cursors.left.isDown){ 
             this.racket.setVelocityX(-150);
-        } 
+            this.racket.setVelocityY(150);
+            console.log("not in the zone");
+           }
+           
+    
         
-        else if (this.cursors.right.isDown) {
+        if (this.cursors.right.isDown && this.racket.x>330) {
+            
+                this.racket.setVelocityX(150);
+                this.racket.setVelocityY(150);
+                console.log("in the zone"); 
+        } else if (this.cursors.right.isDown){
             this.racket.setVelocityX(150);
+            this.racket.setVelocityY(-150);
+            console.log("not in the zone");
         }
 
         if(this.is_hit == 0){
@@ -144,17 +211,47 @@ class gameScene extends Phaser.Scene {
     }
 }
 
-class gameOverScene extends Phaser.Scene {
+class endMenu extends Phaser.Scene {
+    constructor() {
+        super({key: 'endMenu'});
+    }
+  
     preload() {
-        
+        this.load.image('background', 'img/background.jpg');
     }
 
     create() {
+        // background
+        let bg = this.add.sprite(0, 0, 'background');
+
+        // change origin to the top-left of the sprite
+        bg.setOrigin(0, 0);
+
+    this.add.text(45, 50, 'GAME OVER', { font: '50px Arial', align: 'center' });
+
+    this.clickButton = this.add.text(260, 200, 'PLAY AGAIN!', { fill: '#0f0' })
+      .setInteractive()
+      .on('pointerover', () => this.enterButtonHoverState() )
+      .on('pointerout', () => this.enterButtonRestState() )
+      .on('pointerdown', () => this.enterButtonActiveState() )
+      .on('pointerup', () => {
+        this.enterButtonHoverState();
+        this.scene.start('gameScene');
+        console.log('Change Scene to game');
+    });
 
     }
 
-    update() {
+    enterButtonHoverState() {
+        this.clickButton.setStyle({ fill: '#ff0' });
+    }
 
+    enterButtonRestState() {
+        this.clickButton.setStyle({ fill: '#0f0' });
+    }
+
+    enterButtonActiveState() {
+        this.clickButton.setStyle({ fill: '#0ff' });
     }
 }
 
@@ -163,7 +260,7 @@ let config = {
     type: Phaser.AUTO, //Phaser will decide how to render our game (WebGL or Canvas)
     width: 640, // game width
     height: 360, // game height
-    scene: gameScene, // our newly created scene
+    scene: [titleScene, gameScene, endMenu], // our newly created scene
     parent: 'main-game',
     physics: {
         default: 'arcade',
@@ -173,6 +270,6 @@ let config = {
     }
 };
   
-  // create the game, and pass it the configuration
-  let game = new Phaser.Game(config);
+// create the game, and pass it the configuration
+let game = new Phaser.Game(config);
 
