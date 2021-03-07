@@ -145,6 +145,7 @@ class gameScene extends Phaser.Scene {
         // this.graphics.strokeCircleShape(this.circle);
         this.racket.body.setVelocityX(0);
         this.racket.body.setVelocityY(0);
+        // console.log(this.racket.x)
 
         if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, this.asteroidcircle)) {
             // this.asteroid.destroy();
@@ -170,15 +171,32 @@ class gameScene extends Phaser.Scene {
             this.asteroid.setVelocityY(-150);
         }
 
-        if (this.cursors.left.isDown) {
+
+        if (this.cursors.left.isDown && this.racket.x>330) {    
             // this.angle += this.racketSpeed;
             // this.racket.setVelocityX(radius * Math.cos(angle * (Math.PI/180)) + circleCenterX);
             // this.racket.setVelocityY(radius * Math.sin(angle * (Math.PI/180)) + circleCenterY);
+            
+                this.racket.setVelocityX(-150);
+                this.racket.setVelocityY(-150);
+                console.log("in the zone");
+        } else if(this.cursors.left.isDown){ 
             this.racket.setVelocityX(-150);
-        } 
+            this.racket.setVelocityY(150);
+            console.log("not in the zone");
+           }
+           
+    
         
-        else if (this.cursors.right.isDown) {
+        if (this.cursors.right.isDown && this.racket.x>330) {
+            
+                this.racket.setVelocityX(150);
+                this.racket.setVelocityY(150);
+                console.log("in the zone"); 
+        } else if (this.cursors.right.isDown){
             this.racket.setVelocityX(150);
+            this.racket.setVelocityY(-150);
+            console.log("not in the zone");
         }
 
         if(this.is_hit == 0){
