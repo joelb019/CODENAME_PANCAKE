@@ -59,6 +59,7 @@ class gameScene extends Phaser.Scene {
         this.is_hit = 0;
         this.health = 5;
         this.score = 0;
+        this.isScored = false;
     }
 
     makeBar(x, y,color) {
@@ -78,6 +79,7 @@ class gameScene extends Phaser.Scene {
         //return the bar
         return bar;
     }
+
     setValue(bar,percentage) {
         //scale the bar
         bar.scaleX = percentage/100;
@@ -149,13 +151,11 @@ class gameScene extends Phaser.Scene {
         this.racket.body.setVelocityX(0);
         this.racket.body.setVelocityY(0);
 
-        if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, this.asteroidcircle)) {
-            // this.asteroid.destroy();
+        if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, this.asteroidcircle) || this.asteroid.y >= 300) {
             this.asteroidcircle.y = 0;
             this.asteroid.y = 0;
-            // this.asteroid.setVelocityX(0);
-            // this.asteroid.setVelocityY(0);
             this.is_hit = 1;
+
             if(this.is_hit == 1) {
                 this.health = this.health - 1;
                 console.log("health: " + this.health);
@@ -163,6 +163,7 @@ class gameScene extends Phaser.Scene {
                 this.setValue(this.healthBar, this.health*20);
                 this.is_hit = 0;
             }
+
             if(this.health == 0) {
                 //switch scene
                 this.scene.start('endMenu');
@@ -171,10 +172,21 @@ class gameScene extends Phaser.Scene {
         }
 
         if (Phaser.Geom.Intersects.CircleToCircle(this.racketcircle, this.asteroidcircle)) {
-            this.asteroid.setVelocityY(-150);
-            this.score+=5;
-            this.scoreText.setText( "Score: " + this.score);
-            console.log("5");
+            this.isScored = true;
+            
+            if(this.isScored) {
+                this.score+=5;
+                this.scoreText.setText("Score: " + this.score);
+                console.log("5");
+                this.isScored = false;
+            }
+
+            //this.asteroid.setVelocityY(-150);
+
+            var asteroidRandomX = Math.random() * 600;
+
+            this.asteroid.x = asteroidRandomX;
+            this.asteroid.y = 0;
         }
 
         if (this.cursors.left.isDown) {
