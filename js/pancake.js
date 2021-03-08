@@ -103,10 +103,12 @@ class gameScene extends Phaser.Scene {
         this.graphics = this.add.graphics({ fillStyle: { color: 0xaa0000} });
         this.earthcircle = new Phaser.Geom.Circle(330, 400, 160);
         this.earth = this.physics.add.staticImage(330, 400, 'earth');
-        this.asteroid = this.physics.add.image(400, 50, 'asteroid');
-        this.asteroidcircle = new Phaser.Geom.Circle(this.asteroid.x, this.asteroid.y, 30);
         this.racket = this.physics.add.image(330, 200, 'racket');
         this.racketcircle = new Phaser.Geom.Circle(this.racket.x + 40, this.racket.y, 10);
+        this.racketcircle2 = new Phaser.Geom.Circle(this.racket.x + 5, this.racket.y, 10);
+        this.racketcircle3 = new Phaser.Geom.Circle(this.racket.x + 60, this.racket.y, 10);
+        this.asteroid = this.physics.add.image(400, 50, 'asteroid');
+        this.asteroidcircle = new Phaser.Geom.Circle(this.asteroid.x, this.asteroid.y, 30);
 
         this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
     
@@ -136,15 +138,23 @@ class gameScene extends Phaser.Scene {
 
     update(){
         this.graphics.clear();
-        this.graphics.fillCircleShape(this.earthcircle);
-        this.graphics.fillCircleShape(this.asteroidcircle);
-        this.graphics.fillCircleShape(this.racketcircle);
+        // this.graphics.fillCircleShape(this.earthcircle);
+        // this.graphics.fillCircleShape(this.asteroidcircle);
+        // this.graphics.fillCircleShape(this.racketcircle);
+        // this.graphics.fillCircleShape(this.racketcircle2);
+        // this.graphics.fillCircleShape(this.racketcircle3);
         
         this.asteroidcircle.x = this.asteroid.x;
         this.asteroidcircle.y = this.asteroid.y;
 
         this.racketcircle.x = this.racket.x + 40;
-        this.racketcircle.y = this.racket.y;
+        this.racketcircle.y = this.racket.y + 5;
+
+        this.racketcircle2.x = this.racket.x + 5;
+        this.racketcircle2.y = this.racket.y + 5;
+
+        this.racketcircle3.x = this.racket.x + 60;
+        this.racketcircle3.y = this.racket.y + 5;
 
         // this.graphics.strokeCircleShape(this.circle);
         this.racket.body.setVelocityX(0);
@@ -171,7 +181,9 @@ class gameScene extends Phaser.Scene {
             }
         }
 
-        if (Phaser.Geom.Intersects.CircleToCircle(this.racketcircle, this.asteroidcircle)) {
+        if (Phaser.Geom.Intersects.CircleToCircle(this.racketcircle, this.asteroidcircle) ||
+            Phaser.Geom.Intersects.CircleToCircle(this.racketcircle2, this.asteroidcircle) ||
+            Phaser.Geom.Intersects.CircleToCircle(this.racketcircle3, this.asteroidcircle)) {
             this.asteroid.setVelocityY(-150);
             if(!this.isScored) {
                 this.score+=5;
