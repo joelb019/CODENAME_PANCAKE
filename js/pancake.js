@@ -129,7 +129,7 @@ class gameScene extends Phaser.Scene {
         
         this.add.text(10, 295, 'Health');
 
-        this.add.text(10, 10, "Score: " + this.score);
+        this.scoreText = this.add.text(10, 10, "Score: " + this.score);
     }
    
 
@@ -166,11 +166,15 @@ class gameScene extends Phaser.Scene {
             if(this.health == 0) {
                 //switch scene
                 this.scene.start('endMenu');
+                this.score = 0; 
             }
         }
 
         if (Phaser.Geom.Intersects.CircleToCircle(this.racketcircle, this.asteroidcircle)) {
             this.asteroid.setVelocityY(-150);
+            this.score+=5;
+            this.scoreText.setText( "Score: " + this.score);
+            console.log("5");
         }
 
         if (this.cursors.left.isDown) {
