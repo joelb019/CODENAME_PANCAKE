@@ -60,6 +60,8 @@ class gameScene extends Phaser.Scene {
         this.health = 5;
         this.score = 0;
         this.isScored = false;
+        this.racketSpeedUp = false;
+        this.asteroidBounceHigh = false;
     }
 
     makeBar(x, y,color) {
@@ -161,12 +163,10 @@ class gameScene extends Phaser.Scene {
         this.racket.body.setVelocityY(0);
 
         if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, this.asteroidcircle)) {
-            // this.asteroid.destroy();
             this.asteroidcircle.y = 0;
             this.asteroid.y = 0;
-            // this.asteroid.setVelocityX(0);
-            // this.asteroid.setVelocityY(0);
             this.is_hit = 1;
+
             if(this.is_hit == 1) {
                 this.health = this.health - 1;
                 console.log("health: " + this.health);
@@ -174,17 +174,37 @@ class gameScene extends Phaser.Scene {
                 this.setValue(this.healthBar, this.health*20);
                 this.is_hit = 0;
             }
+
             if(this.health == 0) {
                 //switch scene
                 this.scene.start('endMenu');
                 this.score = 0; 
             }
+
+            let damageText = this.add.text(this.earth.x - 10, this.earth.y - 100, "-1", 
+            {color: '#f00', fontSize: '30px', fontFamily: 'monoSpace'});
+            setTimeout(function() {damageText.destroy()}, 750);
+            
         }
 
         if (Phaser.Geom.Intersects.CircleToCircle(this.racketcircle, this.asteroidcircle) ||
             Phaser.Geom.Intersects.CircleToCircle(this.racketcircle2, this.asteroidcircle) ||
             Phaser.Geom.Intersects.CircleToCircle(this.racketcircle3, this.asteroidcircle)) {
+
             this.asteroid.setVelocityY(-150);
+
+            if(!this.isScored) {
+                this.score+=5;
+                this.scoreText.setText( "Score: " + this.score);
+                console.log("Add 5 to Score");
+                this.isScored = true;
+            }            
+        } else if (Phaser.Geom.Intersects.CircleToCircle(this.racketcircle, this.asteroidcircle) && this.asteroidBounceHigh ||
+        Phaser.Geom.Intersects.CircleToCircle(this.racketcircle2, this.asteroidcircle) && this.asteroidBounceHigh ||
+        Phaser.Geom.Intersects.CircleToCircle(this.racketcircle3, this.asteroidcircle) && this.asteroidBounceHigh) {
+            
+            this.asteroid.setVelocityY(-500);
+
             if(!this.isScored) {
                 this.score+=5;
                 this.scoreText.setText( "Score: " + this.score);
@@ -198,12 +218,20 @@ class gameScene extends Phaser.Scene {
             console.log(this.asteroid.y);
         }
 
-        if (this.cursors.left.isDown) {
+        if (this.cursors.left.isDown && this.racketSpeedUp) {
+            this.racket.setVelocityX(-500);
+        }
+        
+        else if (this.cursors.right.isDown && this.racketSpeedUp) {
+            this.racket.setVelocityX(500);
+        }
+        
+        else if (this.cursors.left.isDown) {
             // this.angle += this.racketSpeed;
             // this.racket.setVelocityX(radius * Math.cos(angle * (Math.PI/180)) + circleCenterX);
             // this.racket.setVelocityY(radius * Math.sin(angle * (Math.PI/180)) + circleCenterY);
             this.racket.setVelocityX(-150);
-        } 
+        }
         
         else if (this.cursors.right.isDown) {
             this.racket.setVelocityX(150);
@@ -211,6 +239,20 @@ class gameScene extends Phaser.Scene {
 
         if(this.is_hit == 0){
             this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
+        }
+
+        if (this.cursors.up.isDown) {
+            this.racketSpeedUp = !this.racketSpeedUp;
+        }
+
+        if (this.cursors.down.isDown) {
+            this.asteroidBounceHigh = !this.asteroidBounceHigh;
+            if(this.asteroidBounceHigh) {
+                console.log("Asteroid Bounce Powerup Activated")
+            }
+            if(!this.asteroidBounceHigh) {
+                console.log("Asteroid Bounce Powerup Deactivated")
+            }
         }
     }
 }
