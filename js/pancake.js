@@ -241,19 +241,8 @@ class gameScene extends Phaser.Scene {
             // this.angle += this.racketSpeed;
             // this.racket.setVelocityX(radius * Math.cos(angle * (Math.PI/180)) + circleCenterX);
             // this.racket.setVelocityY(radius * Math.sin(angle * (Math.PI/180)) + circleCenterY);
-<<<<<<< Updated upstream
             this.racket.setVelocityX(-150);
         }
-=======
-            //this.racket.setVelocityX(-150);
-            this.path.getPoint(this.follower.t, this.follower.vec);
-            this.racket.x = this.follower.vec.x;
-            this.racket.y = this.follower.vec.y;
-            if (this.t >= 0){
-                this.t = 0;
-            }
-        } 
->>>>>>> Stashed changes
         
         else if (this.cursors.right.isDown) {
             this.racket.setVelocityX(150);
