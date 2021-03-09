@@ -103,6 +103,10 @@ class gameScene extends Phaser.Scene {
         bg.setOrigin(0, 0);
 
         this.graphics = this.add.graphics({ fillStyle: { color: 0xaa0000} });
+
+        this.path = new Phaser.Curves.Path(300, 300);
+        this.path.add(new Phaser.Curves.Ellipse(330, 400, 200));
+        this.follower = { t: 0, vec: new Phaser.Math.Vector2() };
         this.earthcircle = new Phaser.Geom.Circle(330, 400, 160);
         this.earth = this.physics.add.staticImage(330, 400, 'earth');
         this.racket = this.physics.add.image(330, 200, 'racket');
@@ -135,6 +139,8 @@ class gameScene extends Phaser.Scene {
         this.add.text(10, 295, 'Health');
 
         this.scoreText = this.add.text(10, 10, "Score: " + this.score);
+
+        
     }
    
 
@@ -146,6 +152,11 @@ class gameScene extends Phaser.Scene {
         // this.graphics.fillCircleShape(this.racketcircle2);
         // this.graphics.fillCircleShape(this.racketcircle3);
         
+        this.graphics.lineStyle(2, 0xffffff, 1);
+
+        this.path.draw(this.graphics);
+
+       
         this.asteroidcircle.x = this.asteroid.x;
         this.asteroidcircle.y = this.asteroid.y;
 
@@ -230,8 +241,19 @@ class gameScene extends Phaser.Scene {
             // this.angle += this.racketSpeed;
             // this.racket.setVelocityX(radius * Math.cos(angle * (Math.PI/180)) + circleCenterX);
             // this.racket.setVelocityY(radius * Math.sin(angle * (Math.PI/180)) + circleCenterY);
+<<<<<<< Updated upstream
             this.racket.setVelocityX(-150);
         }
+=======
+            //this.racket.setVelocityX(-150);
+            this.path.getPoint(this.follower.t, this.follower.vec);
+            this.racket.x = this.follower.vec.x;
+            this.racket.y = this.follower.vec.y;
+            if (this.t >= 0){
+                this.t = 0;
+            }
+        } 
+>>>>>>> Stashed changes
         
         else if (this.cursors.right.isDown) {
             this.racket.setVelocityX(150);
