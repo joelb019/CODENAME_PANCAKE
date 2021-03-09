@@ -48,6 +48,7 @@ class titleScene extends Phaser.Scene {
 
 }
 
+
 class gameScene extends Phaser.Scene {
     constructor(){
         super({
@@ -62,6 +63,11 @@ class gameScene extends Phaser.Scene {
         this.isScored = false;
         this.racketSpeedUp = false;
         this.asteroidBounceHigh = false;
+        this.keyA;
+        this.keyS;
+        this.keyD;
+        this.keyW;
+        this.keyShift;
     }
 
     makeBar(x, y,color) {
@@ -140,8 +146,12 @@ class gameScene extends Phaser.Scene {
 
         this.scoreText = this.add.text(10, 10, "Score: " + this.score);
 
-        
-    }
+        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.keyShift = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+    } //end of create
    
 
     update(){
@@ -229,44 +239,43 @@ class gameScene extends Phaser.Scene {
             console.log(this.asteroid.y);
         }
 
-        if (this.cursors.left.isDown && this.racketSpeedUp) {
-            this.racket.setVelocityX(-500);
+        if (this.cursors.left.isDown) {
+            if(this.keyShift.isDown) {
+                this.racket.setVelocityX(-500);
+            } else {
+                this.racket.setVelocityX(-150);
+            }
         }
-        
-        else if (this.cursors.right.isDown && this.racketSpeedUp) {
-            this.racket.setVelocityX(500);
-        }
-        
-        else if (this.cursors.left.isDown) {
-            // this.angle += this.racketSpeed;
-            // this.racket.setVelocityX(radius * Math.cos(angle * (Math.PI/180)) + circleCenterX);
-            // this.racket.setVelocityY(radius * Math.sin(angle * (Math.PI/180)) + circleCenterY);
-            this.racket.setVelocityX(-150);
-        }
-        
-        else if (this.cursors.right.isDown) {
-            this.racket.setVelocityX(150);
+        if (this.cursors.right.isDown) {
+            if(this.keyShift.isDown) {
+                this.racket.setVelocityX(500);
+            } else {
+                this.racket.setVelocityX(150);
+            }
         }
 
         if(this.is_hit == 0){
             this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
         }
 
-        if (this.cursors.up.isDown) {
-            this.racketSpeedUp = !this.racketSpeedUp;
+        if(this.keyA.isDown) {
+            console.log('A key pressed');
+        } 
+        if(this.keyS.isDown) {
+            console.log('S key pressed');
+        } 
+        if(this.keyD.isDown) {
+            console.log('D key pressed');
+        } 
+        if(this.keyW.isDown) {
+            console.log('W key pressed');
         }
+        if(this.keyShift.isDown) {
+            console.log('Shift key pressed')
+        }
+    } //end of update
+} //end of GameScene
 
-        if (this.cursors.down.isDown) {
-            this.asteroidBounceHigh = !this.asteroidBounceHigh;
-            if(this.asteroidBounceHigh) {
-                console.log("Asteroid Bounce Powerup Activated")
-            }
-            if(!this.asteroidBounceHigh) {
-                console.log("Asteroid Bounce Powerup Deactivated")
-            }
-        }
-    }
-}
 
 class endMenu extends Phaser.Scene {
     constructor() {
