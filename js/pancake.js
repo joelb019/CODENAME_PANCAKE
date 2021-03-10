@@ -155,8 +155,8 @@ class gameScene extends Phaser.Scene {
         this.graphics.lineStyle(2, 0xffffff, 1);
 
         this.path.draw(this.graphics);
-
        
+
         this.asteroidcircle.x = this.asteroid.x;
         this.asteroidcircle.y = this.asteroid.y;
 
@@ -241,7 +241,19 @@ class gameScene extends Phaser.Scene {
             // this.angle += this.racketSpeed;
             // this.racket.setVelocityX(radius * Math.cos(angle * (Math.PI/180)) + circleCenterX);
             // this.racket.setVelocityY(radius * Math.sin(angle * (Math.PI/180)) + circleCenterY);
-            this.racket.setVelocityX(-150);
+            //this.racket.setVelocityX(-150);
+
+            // set the t parameter at the start of the path
+            this.follower.t = 0;
+            
+            // get x and y of the given t point            
+            this.path.getPoint(this.follower.t, this.follower.vec);
+
+
+            this.racket.x = this.follower.vec.x;
+
+            this.racket.y = this.follower.vec.y;
+
         }
         
         else if (this.cursors.right.isDown) {
