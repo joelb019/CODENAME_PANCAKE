@@ -97,7 +97,8 @@ class gameScene extends Phaser.Scene {
         this.load.image('earth', 'img/earth.png');
         this.load.image('asteroid', 'img/asteroid.png');
         this.load.image('racket', 'img/tennis.png');
-        this.load.image('explosion', 'img/explosion.png')
+        this.load.image('explosion', 'img/explosion.png');
+        this.load.image('earthExplosion', 'img/earthExplosion.png');
     }
 
 
@@ -195,6 +196,9 @@ class gameScene extends Phaser.Scene {
 
             if(this.health == 0) {
                 //switch scene
+                let earthExplo = this.add.sprite(this.earth.x, this.earth.y, 'earthExplosion');
+                earthExplo.setScale(5);
+                setTimeout(function(){earthExplo.destroy()}, 750);
                 this.scene.start('endMenu');
                 this.score = 0; 
             }
