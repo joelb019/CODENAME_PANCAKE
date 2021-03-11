@@ -97,6 +97,7 @@ class gameScene extends Phaser.Scene {
         this.load.image('earth', 'img/earth.png');
         this.load.image('asteroid', 'img/asteroid.png');
         this.load.image('racket', 'img/tennis.png');
+        this.load.image('explosion', 'img/explosion.png')
     }
 
 
@@ -176,6 +177,10 @@ class gameScene extends Phaser.Scene {
         this.racket.body.setVelocityY(0);
 
         if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, this.asteroidcircle)) {
+            let explo = this.add.sprite(this.asteroid.x, this.asteroid.y, 'explosion');
+            explo.setScale(0.75);
+            setTimeout(function() {explo.destroy()}, 500);
+
             this.asteroidcircle.y = 0;
             this.asteroid.y = 0;
             this.is_hit = 1;
