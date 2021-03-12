@@ -111,13 +111,18 @@ class gameScene extends Phaser.Scene {
         this.graphics = this.add.graphics({ fillStyle: { color: 0xaa0000} });
         this.earthcircle = new Phaser.Geom.Circle(330, 400, 160);
         this.earth = this.physics.add.staticImage(330, 400, 'earth');
-        this.racket = this.physics.add.image(330, 200, 'racket');
+        this.racket = this.physics.add.image(330, 220, 'racket');
         this.racketcircle = new Phaser.Geom.Circle(this.racket.x + 40, this.racket.y, 10);
         this.racketcircle2 = new Phaser.Geom.Circle(this.racket.x + 5, this.racket.y, 10);
         this.racketcircle3 = new Phaser.Geom.Circle(this.racket.x + 60, this.racket.y, 10);
         this.asteroid = this.physics.add.image(400, 50, 'asteroid');
         this.asteroidcircle = new Phaser.Geom.Circle(this.asteroid.x, this.asteroid.y, 30);
-
+        this.rotatecircle = new Phaser.Geom.Circle(330, 400, 185);
+        this.circlecenterx = this.rotatecircle.x;
+        this.circlecentery = this.rotatecircle.y;
+        this.radius = this.rotatecircle.radius;
+        this.angle = 4.60;
+        this.racket.angle = (this.racket.x - 330)/2;
         this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
     
         this.asteroid.setScale(0.1);
@@ -128,7 +133,7 @@ class gameScene extends Phaser.Scene {
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        this.racket.setCollideWorldBounds(true);
+        // this.racket.setCollideWorldBounds(true);
 
         this.asteroid.setCollideWorldBounds(true);
 
@@ -149,6 +154,17 @@ class gameScene extends Phaser.Scene {
         this.keyShift = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
     } //end of create
    
+    rotate(a) {
+        if(this.circlecentery + this.radius * Math.sin(a) < 347) {
+                this.racket.x = (this.circlecenterx + this.radius * Math.cos(a)); // <-- that's the maths you need
+                this.racket.y = (this.circlecentery + this.radius * Math.sin(a));
+            }
+        }
+        // else{
+        //     this.racket.y -= 1;
+        // }
+
+    
 
     update(){
         this.graphics.clear();
@@ -231,13 +247,13 @@ class gameScene extends Phaser.Scene {
             console.log(this.asteroid.y);
         }
 
-        if (this.cursors.left.isDown && this.racketSpeedUp) {
-            this.racket.setVelocityX(-500);
-        }
+        // if (this.cursors.left.isDown && this.racketSpeedUp) {
+        //     this.racket.setVelocityX(-500);
+        // }
         
-        else if (this.cursors.right.isDown && this.racketSpeedUp) {
-            this.racket.setVelocityX(500);
-        }
+        // else if (this.cursors.right.isDown && this.racketSpeedUp) {
+        //     this.racket.setVelocityX(500);
+        // }
         
         // else if (this.cursors.left.isDown) {
         //     // this.angle += this.racketSpeed;
@@ -251,14 +267,37 @@ class gameScene extends Phaser.Scene {
             if(this.keyShift.isDown) {
                 this.racket.setVelocityX(-500);
             } else {
-                this.racket.setVelocityX(-150);
+
+                this.rotate(this.angle);
+                this.angle = (this.angle - Math.PI / 360) % (Math.PI * 2);
+                this.racket.angle = (this.racket.x - 330)/2;
+                console.log(this.racket.y);
+                
+                
+                //console.log(this.angle);
+                // if(this.racket.angle <= 90 && this.racket.angle >= 0){
+                //   this.racket.angle -= 1;
+                // }
+                // else if (this.racket.angle > 90 && this.racket.angle <= 180){
+                //   this.racket.angle += 1;
+                // }
             }
         }
         if (this.cursors.right.isDown) {
             if(this.keyShift.isDown) {
                 this.racket.setVelocityX(500);
             } else {
-                this.racket.setVelocityX(150);
+                // this.racket.setVelocityX(150);
+                
+                // this.racket.angle = (this.racket.x - 330)/2;
+                this.rotate(this.angle);
+                this.angle = (this.angle + Math.PI / 360) % (Math.PI * 2);
+                this.racket.angle = (this.racket.x - 330)/2;
+                
+                console.log(this.racket.y);
+            
+                //console.log(this.angle);
+               
             }
         }
 
@@ -281,6 +320,7 @@ class gameScene extends Phaser.Scene {
         if(this.keyShift.isDown) {
             console.log('Shift key pressed')
         }
+        console.log(this.angle);
     } //end of update
 } //end of GameScene
 
