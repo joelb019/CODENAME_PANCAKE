@@ -171,15 +171,15 @@ class gameScene extends Phaser.Scene {
         // this.graphics.fillCircleShape(this.earthcircle);
         // this.graphics.fillCircleShape(this.asteroidcircle);
         this.graphics.fillCircleShape(this.racketcircle);
-        this.graphics.fillCircleShape(this.racketcircle2);
-        this.graphics.fillCircleShape(this.racketcircle3);
+        // this.graphics.fillCircleShape(this.racketcircle2);
+        // this.graphics.fillCircleShape(this.racketcircle3);
        
 
         this.asteroidcircle.x = this.asteroid.x;
         this.asteroidcircle.y = this.asteroid.y;
 
-        this.racketcircle.x = this.racket.x + 40;
-        this.racketcircle.y = this.racket.y + 5;
+        this.racketcircle.x = this.racket.x + 20 ;
+        this.racketcircle.y = this.racket.y ;
 
         this.racketcircle2.x = this.racket.x + 5;
         this.racketcircle2.y = this.racket.y + 5;
