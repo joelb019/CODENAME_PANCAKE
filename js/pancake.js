@@ -68,6 +68,7 @@ class gameScene extends Phaser.Scene {
         this.keyD;
         this.keyW;
         this.keyShift;
+        this.keyESC
     }
 
     makeBar(x, y,color) {
@@ -154,6 +155,7 @@ class gameScene extends Phaser.Scene {
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyShift = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+        this.keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
     } //end of create
    
     rotate(a) {
@@ -255,6 +257,16 @@ class gameScene extends Phaser.Scene {
             this.isScored = false;
             console.log(this.asteroid.y);
         }
+        this.clickButton = this.add.text(540, 10, 'PAUSE', { fill: '#0f0' })
+        .setInteractive()
+      .on('pointerup', () => {
+          this.asteroid.body.moves = !this.asteroid.body.moves;
+          this.racket.body.moves = !this.racket.body.moves;
+
+
+
+    });
+
 
         // if (this.cursors.left.isDown && this.racketSpeedUp) {
         //     this.racket.setVelocityX(-500);
