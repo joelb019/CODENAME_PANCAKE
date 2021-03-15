@@ -274,36 +274,32 @@ class gameScene extends Phaser.Scene {
 
         if (this.cursors.left.isDown) {
             if(this.keyShift.isDown) {
-                this.racket.setVelocityX(-500);
-            } else {
-
                 this.rotate(this.angle);
-                this.angle = (this.angle - Math.PI / 360) % (Math.PI * 2);
+                this.angle = (this.angle - 20/360 - Math.PI / 360) % (Math.PI * 2);
                 this.racket.angle = (this.racket.x - 330)/2;
-                console.log(this.racket.y);
-                
-                
-                //console.log(this.angle);
-                // if(this.racket.angle <= 90 && this.racket.angle >= 0){
-                //   this.racket.angle -= 1;
-                // }
-                // else if (this.racket.angle > 90 && this.racket.angle <= 180){
-                //   this.racket.angle += 1;
-                // }
+                //console.log(this.racket.y);
+            } else {
+                this.rotate(this.angle);
+                this.angle = (this.angle - 5/360 - Math.PI / 360) % (Math.PI * 2);
+                this.racket.angle = (this.racket.x - 330)/2;
+                //console.log(this.racket.y);
             }
         }
         if (this.cursors.right.isDown) {
             if(this.keyShift.isDown) {
-                this.racket.setVelocityX(500);
+                this.rotate(this.angle);
+                this.angle = (this.angle + 20/360 + Math.PI / 360) % (Math.PI * 2);
+                this.racket.angle = (this.racket.x - 330)/2;
+                //console.log(this.racket.y)
             } else {
                 // this.racket.setVelocityX(150);
                 
                 // this.racket.angle = (this.racket.x - 330)/2;
                 this.rotate(this.angle);
-                this.angle = (this.angle + Math.PI / 360) % (Math.PI * 2);
+                this.angle = (this.angle + 5/360 + Math.PI / 360) % (Math.PI * 2);
                 this.racket.angle = (this.racket.x - 330)/2;
                 
-                console.log(this.racket.y);
+                //console.log(this.racket.y);
             
                 //console.log(this.angle);
                
