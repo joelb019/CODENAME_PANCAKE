@@ -281,13 +281,13 @@ class gameScene extends Phaser.Scene {
             if(this.keyShift.isDown) {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 20/360 - Math.PI / 360) % (Math.PI * 2);
-                this.racket.angle = (this.racket.x - 330);
+                //this.racket.angle = (this.racket.x - 330);
                 //console.log(this.racket.y);
             } else {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 5/360 - Math.PI / 360) % (Math.PI * 2);
-                this.racket.angle = (this.racket.x);
-                //this.racket.angle = (this.racket.x - 330);
+                //this.racket.angle = (this.racket.x);
+                
                 //console.log(this.racket.y);
             }
         }
