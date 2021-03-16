@@ -111,20 +111,21 @@ class gameScene extends Phaser.Scene {
         bg.setOrigin(0, 0);
 
         this.graphics = this.add.graphics({ fillStyle: { color: 0xaa0000} });
-        this.earthcircle = new Phaser.Geom.Circle(330, 400, 160);
-        this.earth = this.physics.add.staticImage(330, 400, 'earth');
-        this.racket = this.physics.add.image(330, 220, 'racket');
+        this.earth = this.physics.add.staticImage(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'earth');
+        this.earthcircle = new Phaser.Geom.Circle(this.earth.x, this.earth.y, 160);
+        this.racket = this.physics.add.image(this.earth.x, this.earth.y - 200, 'racket');
+        this.racketrect = new Phaser.Geom.Rectangle(this.racket.x -5, this.racket.y - 10, 80, 20);
         //this.racketcircle = new Phaser.Geom.Ellipse(this.racket.x, this.racket.y, 110, 20);
         // this.racketcircle2 = new Phaser.Geom.Circle(this.racket.x + 5, this.racket.y, 10);
         // this.racketcircle3 = new Phaser.Geom.Circle(this.racket.x + 60, this.racket.y, 10);
         this.asteroid = this.physics.add.image(400, 50, 'asteroid');
         this.asteroidcircle = new Phaser.Geom.Circle(this.asteroid.x, this.asteroid.y, 30);
-        this.rotatecircle = new Phaser.Geom.Circle(330, 400, 185);
+        this.rotatecircle = new Phaser.Geom.Circle(this.earth.x, this.earth.y + 10, 200);
         this.circlecenterx = this.rotatecircle.x;
         this.circlecentery = this.rotatecircle.y;
         this.radius = this.rotatecircle.radius;
         this.angle = 4.60;
-        this.racket.angle = (this.racket.x - 330)/2;
+        this.racket.angle = this.racket.x/360;
         this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
     
         this.asteroid.setScale(0.1);
@@ -141,13 +142,14 @@ class gameScene extends Phaser.Scene {
 
         this.health = 5;
 
-        this.healthBar = this.makeBar(10 , 320, 0xe74c3c);
+        this.healthBar = this.makeBar(10 , this.sys.game.config.height - 50, 0xe74c3c);
         this.setValue(this.healthBar, this.health*20);
 
         
-        this.add.text(10, 295, 'Health');
+        this.add.text(10, this.healthBar.y - 30, 'Health');
 
         this.scoreText = this.add.text(10, 10, "Score: " + this.score);
+        this.scoreText.setFontSize(40);
 
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -157,10 +159,9 @@ class gameScene extends Phaser.Scene {
     } //end of create
    
     rotate(a) {
-        if(this.circlecentery + this.radius * Math.sin(a) < 347) {
+        // if(this.circlecentery + this.radius * Math.sin(a) < 347) {
                 this.racket.x = (this.circlecenterx + this.radius * Math.cos(a)); // <-- that's the maths you need
                 this.racket.y = (this.circlecentery + this.radius * Math.sin(a));
-            }
         }
         // else{
         //     this.racket.y -= 1;
@@ -170,13 +171,14 @@ class gameScene extends Phaser.Scene {
 
     update(){
         this.graphics.clear();
-        // this.graphics.fillCircleShape(this.earthcircle);
+        //this.graphics.fillCircleShape(this.rotatecircle);
         // this.graphics.fillCircleShape(this.asteroidcircle);
         //this.graphics.fillEllipseShape(this.racketcircle);
         // this.graphics.fillCircleShape(this.racketcircle2);
         // this.graphics.fillCircleShape(this.racketcircle3);
-       
-
+        this.graphics.fillRectShape(this.racketrect);
+        this.racketrect.x = this.racket.x - 10;
+        this.racketrect.y = this.racket.y - 5;
         this.asteroidcircle.x = this.asteroid.x;
         this.asteroidcircle.y = this.asteroid.y;
 
@@ -225,7 +227,7 @@ class gameScene extends Phaser.Scene {
             
         }
 
-        if (Phaser.Geom.Intersects.CircleToRectangle(this.asteroidcircle, this.racket))
+        if (Phaser.Geom.Intersects.CircleToRectangle(this.asteroidcircle, this.racketrect))
             // Phaser.Geom.Intersects.CircleToCircle(this.racketcircle2, this.asteroidcircle) ||
             // Phaser.Geom.Intersects.CircleToCircle(this.racketcircle3, this.asteroidcircle)) 
             {
@@ -238,7 +240,7 @@ class gameScene extends Phaser.Scene {
                 console.log("Add 5 to Score");
                 this.isScored = true;
             }            
-        } else if (Phaser.Geom.Intersects.CircleToRectangle(this.asteroidcircle, this.racket) && this.asteroidBounceHigh)
+        } else if (Phaser.Geom.Intersects.CircleToRectangle(this.asteroidcircle, this.racketrect) && this.asteroidBounceHigh)
         // Phaser.Geom.Intersects.CircleToCircle(this.racketcircle2, this.asteroidcircle) && this.asteroidBounceHigh ||
         // Phaser.Geom.Intersects.CircleToCircle(this.racketcircle3, this.asteroidcircle) && this.asteroidBounceHigh) 
         {
@@ -279,12 +281,13 @@ class gameScene extends Phaser.Scene {
             if(this.keyShift.isDown) {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 20/360 - Math.PI / 360) % (Math.PI * 2);
-                this.racket.angle = (this.racket.x - 330)/2;
+                this.racket.angle = (this.racket.x - 330);
                 //console.log(this.racket.y);
             } else {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 5/360 - Math.PI / 360) % (Math.PI * 2);
-                this.racket.angle = (this.racket.x - 330)/2;
+                this.racket.angle = (this.racket.x);
+                //this.racket.angle = (this.racket.x - 330);
                 //console.log(this.racket.y);
             }
         }
@@ -292,7 +295,7 @@ class gameScene extends Phaser.Scene {
             if(this.keyShift.isDown) {
                 this.rotate(this.angle);
                 this.angle = (this.angle + 20/360 + Math.PI / 360) % (Math.PI * 2);
-                this.racket.angle = (this.racket.x - 330)/2;
+                //this.racket.angle = (this.racket.x - 330)/2;
                 //console.log(this.racket.y)
             } else {
                 // this.racket.setVelocityX(150);
@@ -300,8 +303,7 @@ class gameScene extends Phaser.Scene {
                 // this.racket.angle = (this.racket.x - 330)/2;
                 this.rotate(this.angle);
                 this.angle = (this.angle + 5/360 + Math.PI / 360) % (Math.PI * 2);
-                this.racket.angle = (this.racket.x - 330)/2;
-                
+                //this.racket.angle = (this.racket.x);
                 //console.log(this.racket.y);
             
                 //console.log(this.angle);
@@ -381,8 +383,8 @@ class endMenu extends Phaser.Scene {
 //our game configuration
 let config = {
     type: Phaser.AUTO, //Phaser will decide how to render our game (WebGL or Canvas)
-    width: 640, // game width
-    height: 360, // game height
+    width: 1280, // game width
+    height: 720, // game height
     scene: [titleScene, gameScene, endMenu], // our newly created scene
     parent: 'main-game',
     physics: {
