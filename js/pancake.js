@@ -203,19 +203,58 @@ class gameScene extends Phaser.Scene {
         if(this.is_hit == 0){
             this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
         }
+
         //pausue button 
         this.clickButton = this.add.text(540, 10, 'PAUSE', { fill: '#0f0' })
         .setInteractive()
       .on('pointerup', () => {
-          this.asteroid.body.moves = !this.asteroid.body.moves;
-          this.racket.body.moves = !this.racket.body.moves;
+          this.scene.pause('gameScene');
+          this.scene.launch('pauseMenu')
 
+            
         
         
     });
-    }
+    }   
 }
+class pauseMenu extends Phaser.Scene {
+    constructor() {
+        super({key: 'pauseMenu'})
+    }
+    preload() {
+        this.load.image('background', 'img/background.jpg');
+    }
+    create() {
+        // background
 
+    
+    this.clickButton = this.add.text(270, 150, 'RESUME!', { fill: '#0f0' })
+      .setInteractive()
+      .on('pointerover', () => this.enterButtonHoverState() )
+      .on('pointerout', () => this.enterButtonRestState() )
+      .on('pointerdown', () => this.enterButtonActiveState() )
+      .on('pointerup', () => {
+        this.enterButtonHoverState();
+        
+        this.scene.stop();
+        this.scene.resume('gameScene');
+        console.log('Change Scene to game');
+    });
+
+    }
+    enterButtonHoverState() {
+        this.clickButton.setStyle({ fill: '#ff0' });
+    }
+
+    enterButtonRestState() {
+        this.clickButton.setStyle({ fill: '#0f0' });
+    }
+
+    enterButtonActiveState() {
+        this.clickButton.setStyle({ fill: '#0ff' });
+    }
+
+}
 class endMenu extends Phaser.Scene {
     constructor() {
         super({key: 'endMenu'});
@@ -265,7 +304,7 @@ let config = {
     type: Phaser.AUTO, //Phaser will decide how to render our game (WebGL or Canvas)
     width: 640, // game width
     height: 360, // game height
-    scene: [titleScene, gameScene, endMenu], // our newly created scene
+    scene: [titleScene, gameScene, endMenu, pauseMenu], // our newly created scene
     parent: 'main-game',
     physics: {
         default: 'arcade',
