@@ -224,9 +224,27 @@ class pauseMenu extends Phaser.Scene {
     preload() {
         this.load.image('background', 'img/background.jpg');
     }
+    makeBar(x, y,color) {
+        //draw the bar
+        let bar = this.add.graphics();
+
+        //color the bar
+        bar.fillStyle(color, 1);
+
+        //fill the bar with a rectangle
+        bar.fillRect(0, 0, 200, 30);
+        
+        //position the bar
+        bar.x = x;
+        bar.y = y;
+
+        //return the bar
+        return bar;
+    }
+
     create() {
         // background
-
+        this.healthBar = this.makeBar(450 , 0, 'background');
     
     this.clickButton = this.add.text(270, 150, 'RESUME!', { fill: '#0f0' })
       .setInteractive()
@@ -236,8 +254,10 @@ class pauseMenu extends Phaser.Scene {
       .on('pointerup', () => {
         this.enterButtonHoverState();
         
+
         this.scene.stop();
         this.scene.resume('gameScene');
+                
         console.log('Change Scene to game');
     });
 
