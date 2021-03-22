@@ -61,6 +61,7 @@ class gameScene extends Phaser.Scene {
         this.health = 5;
         this.score = 0;
         this.isScored = false;
+        this.bounced = false;
         this.racketSpeedUp = false;
         this.asteroidBounceHigh = false;
         this.keyA;
@@ -68,6 +69,11 @@ class gameScene extends Phaser.Scene {
         this.keyD;
         this.keyW;
         this.keyShift;
+        this.asteroid1hit = false;
+        this.asteroid2hit = false;
+        this.asteroid3hit = false;
+        this.asteroid4hit = false;
+        this.asteroid5hit = false;
     }
 
     makeBar(x, y,color) {
@@ -119,10 +125,11 @@ class gameScene extends Phaser.Scene {
         this.racketrect = new Phaser.Geom.Rectangle(this.racket.x -5, this.racket.y - 10, 80, 20);
 
         this.asteroid1 = this.physics.add.image(400, -100, 'asteroid');
-        this.asteroid2 = this.physics.add.image(400, -100, 'asteroid');
-        this.asteroid3 = this.physics.add.image(400, -100, 'asteroid');
-        this.asteroid4 = this.physics.add.image(400, -100, 'asteroid');
-        this.asteroid5 = this.physics.add.image(400, -100, 'asteroid');
+        this.asteroid2 = this.physics.add.image(-400, 500, 'asteroid');
+        this.asteroid3 = this.physics.add.image(-500, -200, 'asteroid');
+        this.asteroid4 = this.physics.add.image(600, -300, 'asteroid');
+        this.asteroid5 = this.physics.add.image(100, -400, 'asteroid');
+
 
         this.spaceship1 = this.physics.add.image(400, -200, 'UFO');
         this.spaceship2 = this.physics.add.image(400, -200, 'UFO');
@@ -136,16 +143,50 @@ class gameScene extends Phaser.Scene {
         this.bomb4 = this.physics.add.image(400, -300, 'nuke');
         this.bomb5 = this.physics.add.image(400, -300, 'nuke');
 
-        this.asteroidcircle = new Phaser.Geom.Circle(this.asteroid.x, this.asteroid.y, 30);
+        this.asteroid1circle = new Phaser.Geom.Circle(this.asteroid1.x, this.asteroid1.y, 30);
+        this.asteroid2circle = new Phaser.Geom.Circle(this.asteroid2.x, this.asteroid2.y, 30);
+        this.asteroid3circle = new Phaser.Geom.Circle(this.asteroid3.x, this.asteroid3.y, 30);
+        this.asteroid4circle = new Phaser.Geom.Circle(this.asteroid4.x, this.asteroid4.y, 30);
+        this.asteroid5circle = new Phaser.Geom.Circle(this.asteroid5.x, this.asteroid5.y, 30);
+
+        this.spaceship1circle = new Phaser.Geom.Circle(this.spaceship1.x, this.spaceship1.y, 30);
+        this.spaceship2circle = new Phaser.Geom.Circle(this.spaceship2.x, this.spaceship2.y, 30);
+        this.spaceship3circle = new Phaser.Geom.Circle(this.spaceship3.x, this.spaceship3.y, 30);
+        this.spaceship4circle = new Phaser.Geom.Circle(this.spaceship4.x, this.spaceship4.y, 30);
+        this.spaceship5circle = new Phaser.Geom.Circle(this.spaceship5.x, this.spaceship5.y, 30);
+
+        this.bomb1circle = new Phaser.Geom.Circle(this.bomb1.x, this.bomb1.y, 30);
+        this.bomb2circle = new Phaser.Geom.Circle(this.bomb2.x, this.bomb2.y, 30);
+        this.bomb3circle = new Phaser.Geom.Circle(this.bomb3.x, this.bomb3.y, 30);
+        this.bomb4circle = new Phaser.Geom.Circle(this.bomb4.x, this.bomb4.y, 30);
+        this.bomb5circle = new Phaser.Geom.Circle(this.bomb5.x, this.bomb5.y, 30);
+
         this.rotatecircle = new Phaser.Geom.Circle(this.earth.x, this.earth.y + 10, 200);
         this.circlecenterx = this.rotatecircle.x;
         this.circlecentery = this.rotatecircle.y;
         this.radius = this.rotatecircle.radius;
         this.angle = 4.60;
         this.racket.angle = this.racket.x/360;
-        this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
+
+        this.physics.accelerateToObject(this.asteroid1, this.earth, 60, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid2, this.earth, 30, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid3, this.earth, 70, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid4, this.earth, 50, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid5, this.earth, 40, 300, 300);
+
     
-        this.asteroid.setScale(0.1);
+        this.asteroid1.setScale(0.1);
+        this.asteroid2.setScale(0.1);
+        this.asteroid3.setScale(0.1);
+        this.asteroid4.setScale(0.1);
+        this.asteroid5.setScale(0.1);
+
+        this.spaceship1.setScale(0.1);
+        this.spaceship2.setScale(0.1);
+        this.spaceship3.setScale(0.1);
+        this.spaceship4.setScale(0.1);
+        this.spaceship5.setScale(0.1);
+
 
         this.racket.setScale(0.125)
 
@@ -183,48 +224,20 @@ class gameScene extends Phaser.Scene {
                 this.racket.y = (this.circlecentery + this.radius * Math.sin(a));
         }
 
-    create_enemy(type){
-        if (type == "asteroid"){
-           // this.asteroid = this.physics.add.image(400, 50, 'asteroid');
-        }
-    }
-
-    update(){
-        this.graphics.clear();
-        //this.graphics.fillCircleShape(this.rotatecircle);
-        // this.graphics.fillCircleShape(this.asteroidcircle);
-        //this.graphics.fillEllipseShape(this.racketcircle);
-        // this.graphics.fillCircleShape(this.racketcircle2);
-        // this.graphics.fillCircleShape(this.racketcircle3);
-        this.graphics.fillRectShape(this.racketrect);
-        this.racketrect.x = this.racket.x - 10;
-        this.racketrect.y = this.racket.y - 5;
-        this.asteroidcircle.x = this.asteroid.x;
-        this.asteroidcircle.y = this.asteroid.y;
-
-        // this.racketcircle.x = this.racket.x ;
-        // this.racketcircle.y = this.racket.y ;
-
-        // this.racketcircle2.x = this.racket.x + 5;
-        // this.racketcircle2.y = this.racket.y + 5;
-
-        // this.racketcircle3.x = this.racket.x + 60;
-        // this.racketcircle3.y = this.racket.y + 5;
-
-        // this.graphics.strokeCircleShape(this.circle);
-        this.racket.body.setVelocityX(0);
-        this.racket.body.setVelocityY(0);
-
-        if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, this.asteroidcircle)) {
-            let explo = this.add.sprite(this.asteroid.x, this.asteroid.y, 'explosion');
+    earthcollision(enemyhitbox, enemy){
+            
+        if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, enemyhitbox)) {
+            let explo = this.add.sprite(enemy.x, enemy.y, 'explosion');
             explo.setScale(0.75);
             setTimeout(function() {explo.destroy()}, 500);
 
-            this.asteroidcircle.y = 0;
-            this.asteroid.y = 0;
+            enemy.y =(Math.random() * (900 - -500) + -500);
+            enemy.x =(Math.random()* (1000 - -100) + -100);
             this.is_hit = 1;
 
             if(this.is_hit == 1) {
+                enemy.body.setVelocityX(0);
+                enemy.body.setVelocityY(0);
                 this.health = this.health - 1;
                 console.log("health: " + this.health);
                 //let healthBar=this.makeBar(140,200,0xe74c3c);
@@ -246,79 +259,149 @@ class gameScene extends Phaser.Scene {
             setTimeout(function() {damageText.destroy()}, 750);
             
         }
+    }
 
-        if (Phaser.Geom.Intersects.CircleToRectangle(this.asteroidcircle, this.racketrect))
+    racketcollision(enemyhitbox, enemy, hasbeenhit){
+        if (Phaser.Geom.Intersects.CircleToRectangle(enemyhitbox, this.racketrect) && hasbeenhit == false)
             {
 
-            this.asteroid.setVelocityY(-100);
-
-            if(!this.isScored) {
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
-                console.log("Add 5 to Score");
-                this.isScored = true;
-            }            
-        } else if (Phaser.Geom.Intersects.CircleToRectangle(this.asteroidcircle, this.racketrect) && this.asteroidBounceHigh)
-    
-        {
+            // enemy.setVelocityY(-1 * enemy.body.velocity.y);
+            // enemy.setVelocityX(-1 * enemy.body.velocity.x);
+            enemy.setVelocityY(-1 * enemy.body.velocity.y);
+            enemy.setVelocityX(-1 * enemy.body.velocity.x);
+            console.log("Hello!");
+            hasbeenhit = true;
             
-            this.asteroid.setVelocityY(-500);
 
             if(!this.isScored) {
                 this.score+=5;
                 this.scoreText.setText( "Score: " + this.score);
                 console.log("Add 5 to Score");
                 this.isScored = true;
-            }
-        }
+            }   
+        } 
+        
+        // } else if (Phaser.Geom.Intersects.CircleToRectangle(this.asteroidcircle, this.racketrect) && this.asteroidBounceHigh)
+    
+        // {
+            
+        //     this.asteroid.setVelocityY(-500);
 
-        if(this.asteroid.y <= 150 && this.isScored == true) {
+        //     if(!this.isScored) {
+        //         this.score+=5;
+        //         this.scoreText.setText( "Score: " + this.score);
+        //         console.log("Add 5 to Score");
+        //         this.isScored = true;
+        //     }
+        // }
+
+        if(enemy.y <= 150 && this.isScored == true) {
             this.isScored = false;
-            console.log(this.asteroid.y);
         }
  
+
+    }
+
+    update(){
+
+        this.graphics.clear();
+        this.graphics.fillRectShape(this.racketrect);
+
+        this.racketrect.x = this.racket.x - 10;
+        this.racketrect.y = this.racket.y - 5;
+
+        this.asteroid1circle.x = this.asteroid1.x;
+        this.asteroid1circle.y = this.asteroid1.y;
+
+        this.asteroid2circle.x = this.asteroid2.x;
+        this.asteroid2circle.y = this.asteroid2.y;
+
+        this.asteroid3circle.x = this.asteroid3.x;
+        this.asteroid3circle.y = this.asteroid3.y;
+
+        this.asteroid4circle.x = this.asteroid4.x;
+        this.asteroid4circle.y = this.asteroid4.y;
+
+        this.asteroid5circle.x = this.asteroid5.x;
+        this.asteroid5circle.y = this.asteroid5.y;
+
+        this.spaceship1circle.x = this.spaceship1.x;
+        this.spaceship1circle.y = this.spaceship1.y;
+
+        this.spaceship2circle.x = this.spaceship2.x;
+        this.spaceship2circle.y = this.spaceship2.y;
+
+        this.spaceship3circle.x = this.spaceship3.x;
+        this.spaceship3circle.y = this.spaceship3.y;
+
+        this.spaceship4circle.x = this.spaceship4.x;
+        this.spaceship4circle.y = this.spaceship4.y;
+
+        this.spaceship5circle.x = this.spaceship5.x;
+        this.spaceship5circle.y = this.spaceship5.y;
+
+        this.bomb1circle.x = this.bomb1.x;
+        this.bomb1circle.y = this.bomb1.y;
+
+        this.bomb2circle.x = this.bomb2.x;
+        this.bomb2circle.y = this.bomb2.y;
+
+        this.bomb3circle.x = this.bomb3.x;
+        this.bomb3circle.y = this.bomb3.y;
+
+        this.bomb4circle.x = this.bomb4.x;
+        this.bomb4circle.y = this.bomb4.y;
+
+        this.bomb5circle.x = this.bomb5.x;
+        this.bomb5circle.y = this.bomb5.y;
+
+
+        this.racket.body.setVelocityX(0);
+        this.racket.body.setVelocityY(0);
 
         if (this.cursors.left.isDown) {
             if(this.keyShift.isDown) {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 20/360 - Math.PI / 360) % (Math.PI * 2);
-               // this.racket.angle = (this.angle);
-                //this.racket.angle = (this.angle);
-                //console.log(this.racket.y);
             } else {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 5/360 - Math.PI / 360) % (Math.PI * 2);
-                //this.racket.angle = (this.angle);
-                //this.racket.angle = (this.racket.x);
-                
-                //console.log(this.racket.y);
             }
         }
         if (this.cursors.right.isDown) {
             if(this.keyShift.isDown) {
                 this.rotate(this.angle);
                 this.angle = (this.angle + 20/360 + Math.PI / 360) % (Math.PI * 2);
-               // this.racket.angle = (this.angle);
-                //this.racket.angle = (this.racket.x - 330)/2;
-                //console.log(this.racket.y)
+
             } else {
-                // this.racket.setVelocityX(150);
-                
-                // this.racket.angle = (this.racket.x - 330)/2;
                 this.rotate(this.angle);
                 this.angle = (this.angle + 5/360 + Math.PI / 360) % (Math.PI * 2);
-                //this.racket.angle = (this.racket.x - 330)/2;
-                //this.racket.angle = (this.racket.x);
-                //console.log(this.racket.y);
-            
-                //console.log(this.angle);
                
             }
         }
 
-        if(this.is_hit == 0){
-            this.physics.accelerateToObject(this.asteroid, this.earth, 60, 300, 300);
-        }
+
+        this.earthcollision(this.asteroid1circle, this.asteroid1);
+        this.earthcollision(this.asteroid2circle, this.asteroid2);
+        this.earthcollision(this.asteroid3circle, this.asteroid3);
+        this.earthcollision(this.asteroid4circle, this.asteroid4);
+        this.earthcollision(this.asteroid5circle, this.asteroid5);
+
+        console.log(this.asteroid1hit);
+        this.racketcollision(this.asteroid1circle, this.asteroid1, this.asteroid1hit);
+        this.racketcollision(this.asteroid2circle, this.asteroid2, this.asteroid2hit);
+        this.racketcollision(this.asteroid3circle, this.asteroid3, this.asteroid3hit);
+        this.racketcollision(this.asteroid4circle, this.asteroid4, this.asteroid4hit);
+        this.racketcollision(this.asteroid5circle, this.asteroid5, this.asteroid5hit);
+
+        
+
+        this.physics.accelerateToObject(this.asteroid1, this.earth, 40, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid2, this.earth, 40, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid3, this.earth, 40, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid4, this.earth, 40, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid5, this.earth, 40, 300, 300);
+        
 
         if(this.keyA.isDown) {
             console.log('A key pressed');
@@ -335,7 +418,9 @@ class gameScene extends Phaser.Scene {
         if(this.keyShift.isDown) {
             console.log('Shift key pressed')
         }
-        console.log(this.angle);
+        //console.log(this.angle);
+        // console.log(this.asteroid1.x);
+        // console.log(this.asteroid1.y);
     } //end of update
 } //end of GameScene
 
