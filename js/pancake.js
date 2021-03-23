@@ -119,6 +119,7 @@ class gameScene extends Phaser.Scene {
         this.earthcircle = new Phaser.Geom.Circle(this.earth.x, this.earth.y, 160);
         this.racket = this.physics.add.image(this.earth.x, this.earth.y - 200, 'racket');
         this.racketrect = new Phaser.Geom.Rectangle(this.racket.x -5, this.racket.y - 10, 80, 20);
+        this.earthsquare = new Phaser.Geom.Rectangle(this.earth.x - 200, this.earth.y - 200, 400, 420);
 
         this.asteroid1 = this.physics.add.image(400, -100, 'asteroid');
         this.asteroid2 = this.physics.add.image(-400, 500, 'asteroid');
@@ -181,11 +182,11 @@ class gameScene extends Phaser.Scene {
         // this.asteroid5.body.setVelocityX(Math.random() * (60-50) + 50);
         // this.asteroid5.body.setVelocityY(Math.random() * (60-50) + 50);
 
-        this.physics.accelerateToObject(this.asteroid1, this.earth, 60, 200, 200);
-        this.physics.accelerateToObject(this.asteroid2, this.earth, 60, 200, 200);
-        this.physics.accelerateToObject(this.asteroid3, this.earth, 60, 200, 200);
-        this.physics.accelerateToObject(this.asteroid4, this.earth, 60, 200, 200);
-        this.physics.accelerateToObject(this.asteroid5, this.earth, 60, 200, 200);
+        this.physics.accelerateToObject(this.asteroid1, this.earth, 70, 300, 300);
+        this.physics.accelerateToObject(this.asteroid2, this.earth, 70, 300, 300);
+        this.physics.accelerateToObject(this.asteroid3, this.earth, 70, 300, 300);
+        this.physics.accelerateToObject(this.asteroid4, this.earth, 70, 300, 300);
+        this.physics.accelerateToObject(this.asteroid5, this.earth, 70, 300, 300);
 
         // this.asteroid1.body.setVelocityX(this.asteroid1.body.velocity.x + 15);
         // this.asteroid1.body.setVelocityY(this.asteroid1.body.velocity.y + 15);
@@ -307,44 +308,54 @@ class gameScene extends Phaser.Scene {
             if(hasbeenhit == 1 && this.asteroid1hit == false){
                 enemy.setVelocityY(-1 * enemy.body.velocity.y);
                 enemy.setVelocityX(-1 * enemy.body.velocity.x);
+                this.score+=5;
+                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid1hit = true;
+                
                 console.log("Hi");
             }
 
             if(hasbeenhit == 2 && this.asteroid2hit == false){
                 enemy.setVelocityY(-1 * enemy.body.velocity.y);
                 enemy.setVelocityX(-1 * enemy.body.velocity.x);
+                this.score+=5;
+                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid2hit = true;
             }
 
             if(hasbeenhit == 3 && this.asteroid3hit == false){
                 enemy.setVelocityY(-1 * enemy.body.velocity.y);
                 enemy.setVelocityX(-1 * enemy.body.velocity.x);
+                this.score+=5;
+                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid3hit = true;
             }
 
             if(hasbeenhit == 4 && this.asteroid4hit == false){
                 enemy.setVelocityY(-1 * enemy.body.velocity.y);
                 enemy.setVelocityX(-1 * enemy.body.velocity.x);
+                this.score+=5;
+                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid4hit = true;
             }
 
             if(hasbeenhit == 5 && this.asteroid5hit == false){
                 enemy.setVelocityY(-1 * enemy.body.velocity.y);
                 enemy.setVelocityX(-1 * enemy.body.velocity.x);
+                this.score+=5;
+                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid5hit = true;
             }
             
             //this.asteroid1hit = true;
 
-            if(!this.isScored) {
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
-                this.isScored = true;
-            }   
+            // if(!this.isScored) {
+                
+            //     this.isScored = true;
+            // }   
         } 
 
-        if(enemy.y <= 140 || enemy.y >= 620 || enemy.x <= 370 || enemy.x >= 880) {
+        if(!(Phaser.Geom.Intersects.CircleToRectangle(enemyhitbox, this.earthsquare))) {
             this.isScored = false;
 
             if(hasbeenhit == 1 && this.asteroid1hit == true){
@@ -390,6 +401,7 @@ class gameScene extends Phaser.Scene {
 
         this.graphics.clear();
         this.graphics.fillRectShape(this.racketrect);
+        //this.graphics.fillRectShape(this.earthsquare);
 
         this.racketrect.x = this.racket.x - 10;
         this.racketrect.y = this.racket.y - 5;
