@@ -425,7 +425,64 @@ class gameScene extends Phaser.Scene {
     } //end of update
 } //end of GameScene
 
+class pauseMenu extends Phaser.Scene {
+    constructor() {
+        super({key: 'pauseMenu'})
+    }
+    preload() {
+        this.load.image('background', 'img/background.jpg');
+    }
+    makeBar(x, y,color) {
+        //draw the bar
+        let bar = this.add.graphics();
 
+        //color the bar
+        bar.fillStyle(color, 1);
+
+        //fill the bar with a rectangle
+        bar.fillRect(0, 0, 200, 30);
+        
+        //position the bar
+        bar.x = x;
+        bar.y = y;
+
+        //return the bar
+        return bar;
+    }
+
+    create() {
+        // background
+        this.healthBar = this.makeBar(450 , 0, 'background');
+    
+    this.clickButton = this.add.text(270, 150, 'RESUME!', { fill: '#0f0' })
+      .setInteractive()
+      .on('pointerover', () => this.enterButtonHoverState() )
+      .on('pointerout', () => this.enterButtonRestState() )
+      .on('pointerdown', () => this.enterButtonActiveState() )
+      .on('pointerup', () => {
+        this.enterButtonHoverState();
+        
+
+        this.scene.stop();
+        this.scene.resume('gameScene');
+                
+        console.log('Change Scene to game');
+    });
+
+    }
+    enterButtonHoverState() {
+        this.clickButton.setStyle({ fill: '#ff0' });
+    }
+
+    enterButtonRestState() {
+        this.clickButton.setStyle({ fill: '#0f0' });
+    }
+
+    enterButtonActiveState() {
+        this.clickButton.setStyle({ fill: '#0ff' });
+    }
+
+}
 
 class endMenu extends Phaser.Scene {
     constructor() {
@@ -476,7 +533,7 @@ let config = {
     type: Phaser.AUTO, //Phaser will decide how to render our game (WebGL or Canvas)
     width: 1280, // game width
     height: 720, // game height
-    scene: [titleScene, gameScene, endMenu], // our newly created scene
+    scene: [titleScene, gameScene, endMenu, pauseMenu], // our newly created scene
     parent: 'main-game',
     physics: {
         default: 'arcade',
