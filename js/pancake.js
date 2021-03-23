@@ -19,9 +19,9 @@ class titleScene extends Phaser.Scene {
             // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
     
-        this.add.text(45, 50, 'CODENAME: PANCAKE', { font: '50px Arial', align: 'center' });
+        this.add.text(400, 50, 'CODENAME: PANCAKE', { font: '50px Arial', align: 'center' });
     
-        this.clickButton = this.add.text(260, 200, 'START!', { fill: '#0f0' })
+        this.clickButton = this.add.text(600, 350, 'START!', { font: '25px Arial', fill: '#0f0' })
           .setInteractive()
           .on('pointerover', () => this.enterButtonHoverState() )
           .on('pointerout', () => this.enterButtonRestState() )
@@ -419,6 +419,17 @@ class gameScene extends Phaser.Scene {
         if(this.keyShift.isDown) {
             console.log('Shift key pressed')
         }
+        
+        this.clickButton = this.add.text(1150, 10, 'PAUSE', {  font: '25px Arial', fill: '#0f0' })
+        .setInteractive()
+      .on('pointerup', () => {
+          this.scene.pause('gameScene');
+          this.scene.launch('pauseMenu')
+
+            
+        
+        
+    });
         //console.log(this.angle);
         // console.log(this.asteroid1.x);
         // console.log(this.asteroid1.y);
@@ -440,7 +451,7 @@ class pauseMenu extends Phaser.Scene {
         bar.fillStyle(color, 1);
 
         //fill the bar with a rectangle
-        bar.fillRect(0, 0, 200, 30);
+        bar.fillRect(0, 0, 400, 100);
         
         //position the bar
         bar.x = x;
@@ -451,10 +462,12 @@ class pauseMenu extends Phaser.Scene {
     }
 
     create() {
+        
+
         // background
-        this.healthBar = this.makeBar(450 , 0, 'background');
+        this.healthBar = this.makeBar(1000 , 0, 'background');
     
-    this.clickButton = this.add.text(270, 150, 'RESUME!', { fill: '#0f0' })
+    this.clickButton = this.add.text(625, 350, 'RESUME!', { font: '25px Arial', fill: '#0f0' })
       .setInteractive()
       .on('pointerover', () => this.enterButtonHoverState() )
       .on('pointerout', () => this.enterButtonRestState() )
@@ -500,9 +513,9 @@ class endMenu extends Phaser.Scene {
         // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
 
-    this.add.text(45, 50, 'GAME OVER', { font: '50px Arial', align: 'center' });
+    this.add.text(450, 50, 'GAME OVER', { font: '50px Arial', align: 'center' });
 
-    this.clickButton = this.add.text(260, 200, 'PLAY AGAIN!', { fill: '#0f0' })
+    this.clickButton = this.add.text(575, 350, 'PLAY AGAIN!', { font: '25px Arial',fill: '#0f0' })
       .setInteractive()
       .on('pointerover', () => this.enterButtonHoverState() )
       .on('pointerout', () => this.enterButtonRestState() )
