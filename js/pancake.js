@@ -1,5 +1,12 @@
 //This is our awful game
 
+var gamemusic;
+var menumusic;
+var econtact;
+var rcontact;
+var rloss;
+var lowhealth;
+
 class titleScene extends Phaser.Scene {
     constructor() {
         super({
@@ -10,11 +17,16 @@ class titleScene extends Phaser.Scene {
 
     preload() {
         this.load.image('background', 'img/background.jpg');
+        this.load.audio('menumusic', 'sound/MainMenu.mp3');
+        this.load.audio('InGame', 'sound/InGame.mp3')
       }
     
       create() {
             // background
             let bg = this.add.sprite(0, 0, 'background');
+
+            menumusic = this.sound.add('menumusic');
+            menumusic.play();
 
             // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
@@ -103,6 +115,11 @@ class gameScene extends Phaser.Scene {
         this.load.image('earthExplosion', 'img/earthExplosion.png');
         this.load.image('UFO', 'img/ufo.png');
         this.load.image('nuke', 'img/nuke.png');
+        this.load.audio('InGame', 'sound/InGame.mp3');
+        this.load.audio('econtact', 'sound/CometEarthContact.mp3');
+        this.load.audio('rcontact', 'sound/CometRacketContact.mp3');
+        this.load.audio('rloss', 'sound/RoundLoss.mp3')
+        this.load.audio('lowhealth', 'sound/LowHealth.mp3')
     }
 
 
@@ -110,6 +127,10 @@ class gameScene extends Phaser.Scene {
 
         // background
         let bg = this.add.sprite(0, 0, 'background');
+
+        menumusic.stop();
+        gamemusic = this.sound.add('InGame');
+        gamemusic.play();
 
         // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
@@ -253,6 +274,8 @@ class gameScene extends Phaser.Scene {
             setTimeout(function() {explo.destroy()}, 500);
             this.y = Math.random();
             console.log(this.y);
+            econtact = this.sound.add('econtact');
+            econtact.play();
             if (this.y > 0.5){
                 enemy.y = (Math.random() * (-130 - -30) + -130);
             }
@@ -311,6 +334,8 @@ class gameScene extends Phaser.Scene {
                 this.score+=5;
                 this.scoreText.setText( "Score: " + this.score);
                 this.asteroid1hit = true;
+                rcontact = this.sound.add('rcontact');
+                rcontact.play();
                 
                 console.log("Hi");
             }
@@ -321,6 +346,8 @@ class gameScene extends Phaser.Scene {
                 this.score+=5;
                 this.scoreText.setText( "Score: " + this.score);
                 this.asteroid2hit = true;
+                rcontact = this.sound.add('rcontact');
+                rcontact.play();
             }
 
             if(hasbeenhit == 3 && this.asteroid3hit == false){
@@ -329,6 +356,8 @@ class gameScene extends Phaser.Scene {
                 this.score+=5;
                 this.scoreText.setText( "Score: " + this.score);
                 this.asteroid3hit = true;
+                rcontact = this.sound.add('rcontact');
+                rcontact.play();
             }
 
             if(hasbeenhit == 4 && this.asteroid4hit == false){
@@ -337,6 +366,8 @@ class gameScene extends Phaser.Scene {
                 this.score+=5;
                 this.scoreText.setText( "Score: " + this.score);
                 this.asteroid4hit = true;
+                rcontact = this.sound.add('rcontact');
+                rcontact.play();
             }
 
             if(hasbeenhit == 5 && this.asteroid5hit == false){
@@ -345,6 +376,8 @@ class gameScene extends Phaser.Scene {
                 this.score+=5;
                 this.scoreText.setText( "Score: " + this.score);
                 this.asteroid5hit = true;
+                rcontact = this.sound.add('rcontact');
+                rcontact.play();
             }
             
             //this.asteroid1hit = true;
@@ -603,11 +636,16 @@ class endMenu extends Phaser.Scene {
   
     preload() {
         this.load.image('background', 'img/background.jpg');
+        this.load.audio('menumusic', 'sound/MainMenu.mp3');
     }
 
     create() {
         // background
         let bg = this.add.sprite(0, 0, 'background');
+
+        gamemusic.stop();
+        menumusic = this.sound.add('menumusic');
+        menumusic.play();
 
         // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
