@@ -447,24 +447,30 @@ class gameScene extends Phaser.Scene {
             if(this.keyShift.isDown) {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 20/360 - Math.PI / 360) % (Math.PI * 2);
+                this.racket.angle = (this.racket.x - 640)/3;
             } else {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 5/360 - Math.PI / 360) % (Math.PI * 2);
-
+                this.racket.angle = (this.racket.x - 640)/3;
             }
         }
         if (this.cursors.right.isDown) {
             if(this.keyShift.isDown) {
                 this.rotate(this.angle);
-                this.angle = (this.angle + 20/360 + Math.PI / 360) % (Math.PI * 2);
-
+                this.angle = (this.angle + 20/360 + Math.PI / 360) % (Math.PI * 2);                
             } else {
                 this.rotate(this.angle);
                 this.angle = (this.angle + 5/360 + Math.PI / 360) % (Math.PI * 2);
-               
+                if(this.racket.y < 350) {
+                    this.racket.angle = (this.racket.x - 640)/3;
+                    this.racketrect.angle = (this.racket.x - 640)/3;
+                } else {
+                    this.racket.angle = ((this.racket.x - 640)/3)*-1;
+                    this.racketrect.angle = ((this.racket.x - 640)/3)*-1;
+                }
             }
         }
-
+        
 
         this.earthcollision(this.asteroid1circle, this.asteroid1);
         this.earthcollision(this.asteroid2circle, this.asteroid2);
