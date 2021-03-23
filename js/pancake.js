@@ -19,9 +19,9 @@ class titleScene extends Phaser.Scene {
             // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
     
-        this.add.text(45, 50, 'CODENAME: PANCAKE', { font: '50px Arial', align: 'center' });
+        this.add.text(400, 50, 'CODENAME: PANCAKE', { font: '50px Arial', align: 'center' });
     
-        this.clickButton = this.add.text(260, 200, 'START!', { fill: '#0f0' })
+        this.clickButton = this.add.text(600, 350, 'START!', { font: '25px Arial', fill: '#0f0' })
           .setInteractive()
           .on('pointerover', () => this.enterButtonHoverState() )
           .on('pointerout', () => this.enterButtonRestState() )
@@ -119,6 +119,7 @@ class gameScene extends Phaser.Scene {
         this.earthcircle = new Phaser.Geom.Circle(this.earth.x, this.earth.y, 160);
         this.racket = this.physics.add.image(this.earth.x, this.earth.y - 200, 'racket');
         this.racketrect = new Phaser.Geom.Rectangle(this.racket.x -5, this.racket.y - 10, 80, 20);
+        this.earthsquare = new Phaser.Geom.Rectangle(this.earth.x - 200, this.earth.y - 200, 400, 420);
 
         this.asteroid1 = this.physics.add.image(400, -100, 'asteroid');
         this.asteroid2 = this.physics.add.image(-400, 500, 'asteroid');
@@ -181,11 +182,11 @@ class gameScene extends Phaser.Scene {
         // this.asteroid5.body.setVelocityX(Math.random() * (60-50) + 50);
         // this.asteroid5.body.setVelocityY(Math.random() * (60-50) + 50);
 
-        this.physics.accelerateToObject(this.asteroid1, this.earth, 60, 200, 200);
-        this.physics.accelerateToObject(this.asteroid2, this.earth, 60, 200, 200);
-        this.physics.accelerateToObject(this.asteroid3, this.earth, 60, 200, 200);
-        this.physics.accelerateToObject(this.asteroid4, this.earth, 60, 200, 200);
-        this.physics.accelerateToObject(this.asteroid5, this.earth, 60, 200, 200);
+        this.physics.accelerateToObject(this.asteroid1, this.earth, 70, 300, 300);
+        this.physics.accelerateToObject(this.asteroid2, this.earth, 70, 300, 300);
+        this.physics.accelerateToObject(this.asteroid3, this.earth, 70, 300, 300);
+        this.physics.accelerateToObject(this.asteroid4, this.earth, 70, 300, 300);
+        this.physics.accelerateToObject(this.asteroid5, this.earth, 70, 300, 300);
 
         // this.asteroid1.body.setVelocityX(this.asteroid1.body.velocity.x + 15);
         // this.asteroid1.body.setVelocityY(this.asteroid1.body.velocity.y + 15);
@@ -307,44 +308,54 @@ class gameScene extends Phaser.Scene {
             if(hasbeenhit == 1 && this.asteroid1hit == false){
                 enemy.setVelocityY(-1 * enemy.body.velocity.y);
                 enemy.setVelocityX(-1 * enemy.body.velocity.x);
+                this.score+=5;
+                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid1hit = true;
+                
                 console.log("Hi");
             }
 
             if(hasbeenhit == 2 && this.asteroid2hit == false){
                 enemy.setVelocityY(-1 * enemy.body.velocity.y);
                 enemy.setVelocityX(-1 * enemy.body.velocity.x);
+                this.score+=5;
+                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid2hit = true;
             }
 
             if(hasbeenhit == 3 && this.asteroid3hit == false){
                 enemy.setVelocityY(-1 * enemy.body.velocity.y);
                 enemy.setVelocityX(-1 * enemy.body.velocity.x);
+                this.score+=5;
+                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid3hit = true;
             }
 
             if(hasbeenhit == 4 && this.asteroid4hit == false){
                 enemy.setVelocityY(-1 * enemy.body.velocity.y);
                 enemy.setVelocityX(-1 * enemy.body.velocity.x);
+                this.score+=5;
+                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid4hit = true;
             }
 
             if(hasbeenhit == 5 && this.asteroid5hit == false){
                 enemy.setVelocityY(-1 * enemy.body.velocity.y);
                 enemy.setVelocityX(-1 * enemy.body.velocity.x);
+                this.score+=5;
+                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid5hit = true;
             }
             
             //this.asteroid1hit = true;
 
-            if(!this.isScored) {
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
-                this.isScored = true;
-            }   
+            // if(!this.isScored) {
+                
+            //     this.isScored = true;
+            // }   
         } 
 
-        if(enemy.y <= 140 || enemy.y >= 620 || enemy.x <= 370 || enemy.x >= 880) {
+        if(!(Phaser.Geom.Intersects.CircleToRectangle(enemyhitbox, this.earthsquare))) {
             this.isScored = false;
 
             if(hasbeenhit == 1 && this.asteroid1hit == true){
@@ -390,6 +401,7 @@ class gameScene extends Phaser.Scene {
 
         this.graphics.clear();
         this.graphics.fillRectShape(this.racketrect);
+        //this.graphics.fillRectShape(this.earthsquare);
 
         this.racketrect.x = this.racket.x - 10;
         this.racketrect.y = this.racket.y - 5;
@@ -506,13 +518,83 @@ class gameScene extends Phaser.Scene {
         if(this.keyShift.isDown) {
             console.log('Shift key pressed')
         }
+        
+        this.clickButton = this.add.text(1150, 10, 'PAUSE', {  font: '25px Arial', fill: '#0f0' })
+        .setInteractive()
+      .on('pointerup', () => {
+          this.scene.pause('gameScene');
+          this.scene.launch('pauseMenu')
+
+            
+        
+        
+    });
         //console.log(this.angle);
         // console.log(this.asteroid1.x);
         // console.log(this.asteroid1.y);
     } //end of update
 } //end of GameScene
 
+class pauseMenu extends Phaser.Scene {
+    constructor() {
+        super({key: 'pauseMenu'})
+    }
+    preload() {
+        this.load.image('background', 'img/background.jpg');
+    }
+    makeBar(x, y,color) {
+        //draw the bar
+        let bar = this.add.graphics();
 
+        //color the bar
+        bar.fillStyle(color, 1);
+
+        //fill the bar with a rectangle
+        bar.fillRect(0, 0, 400, 100);
+        
+        //position the bar
+        bar.x = x;
+        bar.y = y;
+
+        //return the bar
+        return bar;
+    }
+
+    create() {
+        
+
+        // background
+        this.healthBar = this.makeBar(1000 , 0, 'background');
+    
+    this.clickButton = this.add.text(625, 350, 'RESUME!', { font: '25px Arial', fill: '#0f0' })
+      .setInteractive()
+      .on('pointerover', () => this.enterButtonHoverState() )
+      .on('pointerout', () => this.enterButtonRestState() )
+      .on('pointerdown', () => this.enterButtonActiveState() )
+      .on('pointerup', () => {
+        this.enterButtonHoverState();
+        
+
+        this.scene.stop();
+        this.scene.resume('gameScene');
+                
+        console.log('Change Scene to game');
+    });
+
+    }
+    enterButtonHoverState() {
+        this.clickButton.setStyle({ fill: '#ff0' });
+    }
+
+    enterButtonRestState() {
+        this.clickButton.setStyle({ fill: '#0f0' });
+    }
+
+    enterButtonActiveState() {
+        this.clickButton.setStyle({ fill: '#0ff' });
+    }
+
+}
 
 class endMenu extends Phaser.Scene {
     constructor() {
@@ -530,9 +612,9 @@ class endMenu extends Phaser.Scene {
         // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
 
-    this.add.text(45, 50, 'GAME OVER', { font: '50px Arial', align: 'center' });
+    this.add.text(450, 50, 'GAME OVER', { font: '50px Arial', align: 'center' });
 
-    this.clickButton = this.add.text(260, 200, 'PLAY AGAIN!', { fill: '#0f0' })
+    this.clickButton = this.add.text(575, 350, 'PLAY AGAIN!', { font: '25px Arial',fill: '#0f0' })
       .setInteractive()
       .on('pointerover', () => this.enterButtonHoverState() )
       .on('pointerout', () => this.enterButtonRestState() )
@@ -564,7 +646,7 @@ let config = {
     
     width: 1280, // game width
     height: 720, // game height
-    scene: [titleScene, gameScene, endMenu], // our newly created scene
+    scene: [titleScene, gameScene, endMenu, pauseMenu], // our newly created scene
     parent: 'main-game',
     physics: {
         default: 'arcade',
