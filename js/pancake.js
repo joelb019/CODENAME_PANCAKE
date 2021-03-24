@@ -296,7 +296,7 @@ class gameScene extends Phaser.Scene {
                 this.is_hit = 0;
             }
 
-            if(this.health == 0) {
+            if(this.health == -1000) {
                 //switch scene
                 let earthExplo = this.add.sprite(this.earth.x, this.earth.y, 'earthExplosion');
                 earthExplo.setScale(5);
@@ -483,11 +483,11 @@ class gameScene extends Phaser.Scene {
             if(this.keyShift.isDown) {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 20/360 - Math.PI / 360) % (Math.PI * 2);
-               // this.racket.angle = (this.racket.x - 640)/3;
+                this.racket.angle = (this.racket.x - 640)/3;
             } else {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 5/360 - Math.PI / 360) % (Math.PI * 2);
-               // this.racket.angle = (this.racket.x - 640)/3;
+                this.racket.angle = (this.racket.x - 640)/3;
             }
         }
         if (this.cursors.right.isDown) {
@@ -498,11 +498,11 @@ class gameScene extends Phaser.Scene {
                 this.rotate(this.angle);
                 this.angle = (this.angle + 5/360 + Math.PI / 360) % (Math.PI * 2);
                 if(this.racket.y < 350) {
-                   // this.racket.angle = (this.racket.x - 640)/3;
-                   // this.racketrect.angle = (this.racket.x - 640)/3;
+                    this.racket.angle = (this.racket.x - 640)/3;
+                    this.racketrect.angle = (this.racket.x - 640)/3;
                 } else {
-                   // this.racket.angle = ((this.racket.x - 640)/3)*-1;
-                   // this.racketrect.angle = ((this.racket.x - 640)/3)*-1;
+                    this.racket.angle = ((this.racket.x - 640)/3)*-1;
+                    this.racketrect.angle = ((this.racket.x - 640)/3)*-1;
                 }
             }
         }
@@ -568,7 +568,7 @@ class gameScene extends Phaser.Scene {
         .setInteractive()
       .on('pointerup', () => {
         
-
+        econtact.pause();
         gamemusic.pause();
         
         //PUT PAUSE MUSIC HERE
@@ -611,6 +611,8 @@ class pauseMenu extends Phaser.Scene {
     }
 
     create() {
+        menumusic = this.sound.add('menumusic');
+        menumusic.play();
         
 
         // background
@@ -624,10 +626,13 @@ class pauseMenu extends Phaser.Scene {
       .on('pointerup', () => {
         this.enterButtonHoverState();
         
+        menumusic.stop();
+        econtact.resume();
         gamemusic.resume();
         this.scene.stop();
-
-        //STOP PAUSE MUSIC HERE
+        
+        
+        //STOP PAUSE MUSIC
         this.scene.resume('gameScene');
 
                 
