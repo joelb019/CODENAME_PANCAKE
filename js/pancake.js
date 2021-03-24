@@ -296,7 +296,7 @@ class gameScene extends Phaser.Scene {
                 this.is_hit = 0;
             }
 
-            if(this.health == -1000) {
+            if(this.health == 0) {
                 //switch scene
                 let earthExplo = this.add.sprite(this.earth.x, this.earth.y, 'earthExplosion');
                 earthExplo.setScale(5);
@@ -483,11 +483,11 @@ class gameScene extends Phaser.Scene {
             if(this.keyShift.isDown) {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 20/360 - Math.PI / 360) % (Math.PI * 2);
-                this.racket.angle = (this.racket.x - 640)/3;
+               // this.racket.angle = (this.racket.x - 640)/3;
             } else {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 5/360 - Math.PI / 360) % (Math.PI * 2);
-                this.racket.angle = (this.racket.x - 640)/3;
+               // this.racket.angle = (this.racket.x - 640)/3;
             }
         }
         if (this.cursors.right.isDown) {
@@ -498,11 +498,11 @@ class gameScene extends Phaser.Scene {
                 this.rotate(this.angle);
                 this.angle = (this.angle + 5/360 + Math.PI / 360) % (Math.PI * 2);
                 if(this.racket.y < 350) {
-                    this.racket.angle = (this.racket.x - 640)/3;
-                    this.racketrect.angle = (this.racket.x - 640)/3;
+                   // this.racket.angle = (this.racket.x - 640)/3;
+                   // this.racketrect.angle = (this.racket.x - 640)/3;
                 } else {
-                    this.racket.angle = ((this.racket.x - 640)/3)*-1;
-                    this.racketrect.angle = ((this.racket.x - 640)/3)*-1;
+                   // this.racket.angle = ((this.racket.x - 640)/3)*-1;
+                   // this.racketrect.angle = ((this.racket.x - 640)/3)*-1;
                 }
             }
         }
