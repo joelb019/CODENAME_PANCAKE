@@ -29,6 +29,7 @@ class titleScene extends Phaser.Scene {
           .on('pointerup', () => {
             this.enterButtonHoverState();
             this.scene.start('gameScene');
+            
             console.log('Change Scene to game');
         });
     
@@ -64,11 +65,13 @@ class gameScene extends Phaser.Scene {
         this.bounced = false;
         this.racketSpeedUp = false;
         this.asteroidBounceHigh = false;
+        this.Wave1 = false;
         this.keyA;
         this.keyS;
         this.keyD;
         this.keyW;
         this.keyShift;
+        this.accelerate = false
 
     }
 
@@ -119,10 +122,10 @@ class gameScene extends Phaser.Scene {
         this.earthcircle = new Phaser.Geom.Circle(this.earth.x, this.earth.y, 160);
         this.racket = this.physics.add.image(this.earth.x, this.earth.y - 200, 'racket');
         this.racketrect = new Phaser.Geom.Rectangle(this.racket.x -5, this.racket.y - 10, 80, 20);
-        this.earthsquare = new Phaser.Geom.Rectangle(this.earth.x - 200, this.earth.y - 200, 400, 420);
+        this.earthsquare = new Phaser.Geom.Rectangle(this.earth.x - 220, this.earth.y - 200, 500, 420);
 
         this.asteroid1 = this.physics.add.image(400, -100, 'asteroid');
-        this.asteroid2 = this.physics.add.image(-400, 500, 'asteroid');
+        this.asteroid2 = this.physics.add.image(1300, 900, 'asteroid');
         this.asteroid3 = this.physics.add.image(-500, -200, 'asteroid');
         this.asteroid4 = this.physics.add.image(600, -300, 'asteroid');
         this.asteroid5 = this.physics.add.image(100, -400, 'asteroid');
@@ -171,29 +174,14 @@ class gameScene extends Phaser.Scene {
         this.angle = 4.60;
         this.racket.angle = this.racket.x/360;
 
-        // this.asteroid1.body.setVelocityX(Math.random() * (0-50) + 50);
-        // this.asteroid1.body.setVelocityY(Math.random() * (60-50) + 50);
-        // this.asteroid2.body.setVelocityX(Math.random() * (60-50) + 50);
-        // this.asteroid2.body.setVelocityY(Math.random() * (60-50) + 50);
-        // this.asteroid3.body.setVelocityX(Math.random() * (60-50) + 50);
-        // this.asteroid3.body.setVelocityY(Math.random() * (60-50) + 50);
-        // this.asteroid4.body.setVelocityX(Math.random() * (60-50) + 50);
-        // this.asteroid4.body.setVelocityY(Math.random() * (60-50) + 50);
-        // this.asteroid5.body.setVelocityX(Math.random() * (60-50) + 50);
-        // this.asteroid5.body.setVelocityY(Math.random() * (60-50) + 50);
+        
 
-        this.physics.accelerateToObject(this.asteroid1, this.earth, 70, 300, 300);
-        this.physics.accelerateToObject(this.asteroid2, this.earth, 70, 300, 300);
-        this.physics.accelerateToObject(this.asteroid3, this.earth, 70, 300, 300);
-        this.physics.accelerateToObject(this.asteroid4, this.earth, 70, 300, 300);
-        this.physics.accelerateToObject(this.asteroid5, this.earth, 70, 300, 300);
+        //this.physics.accelerateToObject(this.asteroid1, this.earth, 70, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid2, this.earth, 70, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid3, this.earth, 70, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid4, this.earth, 70, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid5, this.earth, 70, 300, 300);
 
-        // this.asteroid1.body.setVelocityX(this.asteroid1.body.velocity.x + 15);
-        // this.asteroid1.body.setVelocityY(this.asteroid1.body.velocity.y + 15);
-        // this.asteroid2.body.setVelocityX(this.asteroid2.body.velocity.x + 15);
-        // this.asteroid3.body.setVelocityX(this.asteroid3.body.velocity.x + 15);
-        // this.asteroid4.body.setVelocityX(this.asteroid4.body.velocity.x + 15);
-        // this.asteroid5.body.setVelocityX(this.asteroid5.body.velocity.x + 15);
     
         this.asteroid1.setScale(0.1);
         this.asteroid2.setScale(0.1);
@@ -237,13 +225,16 @@ class gameScene extends Phaser.Scene {
         this.keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
     } //end of create
 
-    
    
     rotate(a) {
         // if(this.circlecentery + this.radius * Math.sin(a) < 347) {
                 this.racket.x = (this.circlecenterx + this.radius * Math.cos(a)); // <-- that's the maths you need
                 this.racket.y = (this.circlecentery + this.radius * Math.sin(a));
         }
+
+    onEvent(){
+        this.accelerate = true;
+    }
 
     earthcollision(enemyhitbox, enemy){
         // x : (-120 -> -20)-> (1300 -> 1400)  y: (-120 -> -20) -> (740 - 840)
@@ -400,7 +391,7 @@ class gameScene extends Phaser.Scene {
     update(){
 
         this.graphics.clear();
-        this.graphics.fillRectShape(this.racketrect);
+       // this.graphics.fillRectShape(this.racketrect);
         //this.graphics.fillRectShape(this.earthsquare);
 
         this.racketrect.x = this.racket.x - 10;
@@ -489,12 +480,33 @@ class gameScene extends Phaser.Scene {
         this.racketcollision(this.asteroid3circle, this.asteroid3, 3);
         this.racketcollision(this.asteroid4circle, this.asteroid4, 4);
         this.racketcollision(this.asteroid5circle, this.asteroid5, 5);
+        
+        if(this.Wave1 == false){
+        this.WaveText = this.add.text(this.earth.x- 40, this.earth.y - 300, "WAVE 1", 
+        {color: '#f00', fontSize: '30px', fontFamily: 'monoSpace'});
+        }        
+        
+        this.Wave1 = true;
+        if (this.Wave1 == true){
 
-        this.physics.accelerateToObject(this.asteroid1, this.earth, 50, 100, 100);
-        this.physics.accelerateToObject(this.asteroid2, this.earth, 50, 100, 100);
-        this.physics.accelerateToObject(this.asteroid3, this.earth, 50, 100, 100);
-        this.physics.accelerateToObject(this.asteroid4, this.earth, 50, 100, 100);
-        this.physics.accelerateToObject(this.asteroid5, this.earth, 50, 100, 100);
+            if(this.score >= 5){
+            this.WaveText.destroy()
+            }
+            this.physics.accelerateToObject(this.asteroid1, this.earth, 50, 300, 300);
+            if (this.score > 20){
+
+                this.physics.accelerateToObject(this.asteroid2, this.earth, 50, 300, 300);
+            }
+            if(this.score > 40){
+                this.physics.accelerateToObject(this.asteroid3, this.earth, 50, 300, 300);
+            }
+            // if(this.score > 70){
+            //     this.physics.accelerateToObject(this.asteroid4, this.earth, 50, 300, 300);
+            // }
+
+        }
+
+        
         
 
         if(this.keyA.isDown) {
