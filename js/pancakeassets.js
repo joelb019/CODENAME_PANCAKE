@@ -2,10 +2,6 @@
 
 var gamemusic;
 var menumusic;
-var econtact;
-var rcontact;
-var rloss;
-var lowhealth;
 
 class titleScene extends Phaser.Scene {
     constructor() {
@@ -18,22 +14,18 @@ class titleScene extends Phaser.Scene {
     preload() {
         this.load.image('background', 'img/background.jpg');
         this.load.audio('menumusic', 'sound/MainMenu.mp3');
-        this.load.audio('InGame', 'sound/InGame.mp3')
       }
     
       create() {
             // background
             let bg = this.add.sprite(0, 0, 'background');
 
-            menumusic = this.sound.add('menumusic');
-            menumusic.play();
-
             // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
     
-        this.add.text(400, 50, 'CODENAME: PANCAKE', { font: '50px Arial', align: 'center' });
+        this.add.text(45, 50, 'CODENAME: PANCAKE', { font: '50px Arial', align: 'center' });
     
-        this.clickButton = this.add.text(600, 350, 'START!', { font: '25px Arial', fill: '#0f0' })
+        this.clickButton = this.add.text(260, 200, 'START!', { fill: '#0f0' })
           .setInteractive()
           .on('pointerover', () => this.enterButtonHoverState() )
           .on('pointerout', () => this.enterButtonRestState() )
@@ -41,8 +33,10 @@ class titleScene extends Phaser.Scene {
           .on('pointerup', () => {
             this.enterButtonHoverState();
             this.scene.start('gameScene');
-            
             console.log('Change Scene to game');
+
+        menumusic = this.sound.add('menumusic');
+        menumusic.play();
         });
     
       }
@@ -77,14 +71,16 @@ class gameScene extends Phaser.Scene {
         this.bounced = false;
         this.racketSpeedUp = false;
         this.asteroidBounceHigh = false;
-        this.Wave1 = false;
         this.keyA;
         this.keyS;
         this.keyD;
         this.keyW;
         this.keyShift;
-        this.accelerate = false
-
+        this.asteroid1hit = false;
+        this.asteroid2hit = false;
+        this.asteroid3hit = false;
+        this.asteroid4hit = false;
+        this.asteroid5hit = false;
     }
 
     makeBar(x, y,color) {
@@ -118,11 +114,6 @@ class gameScene extends Phaser.Scene {
         this.load.image('earthExplosion', 'img/earthExplosion.png');
         this.load.image('UFO', 'img/ufo.png');
         this.load.image('nuke', 'img/nuke.png');
-        this.load.audio('InGame', 'sound/InGame.mp3');
-        this.load.audio('econtact', 'sound/CometEarthContact.mp3');
-        this.load.audio('rcontact', 'sound/CometRacketContact.mp3');
-        this.load.audio('rloss', 'sound/RoundLoss.mp3')
-        this.load.audio('lowhealth', 'sound/LowHealth.mp3')
     }
 
 
@@ -130,10 +121,6 @@ class gameScene extends Phaser.Scene {
 
         // background
         let bg = this.add.sprite(0, 0, 'background');
-
-        menumusic.stop();
-        gamemusic = this.sound.add('InGame');
-        gamemusic.play();
 
         // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
@@ -143,19 +130,12 @@ class gameScene extends Phaser.Scene {
         this.earthcircle = new Phaser.Geom.Circle(this.earth.x, this.earth.y, 160);
         this.racket = this.physics.add.image(this.earth.x, this.earth.y - 200, 'racket');
         this.racketrect = new Phaser.Geom.Rectangle(this.racket.x -5, this.racket.y - 10, 80, 20);
-        this.earthsquare = new Phaser.Geom.Rectangle(this.earth.x - 220, this.earth.y - 200, 500, 420);
 
         this.asteroid1 = this.physics.add.image(400, -100, 'asteroid');
-        this.asteroid2 = this.physics.add.image(1300, 900, 'asteroid');
+        this.asteroid2 = this.physics.add.image(-400, 500, 'asteroid');
         this.asteroid3 = this.physics.add.image(-500, -200, 'asteroid');
         this.asteroid4 = this.physics.add.image(600, -300, 'asteroid');
         this.asteroid5 = this.physics.add.image(100, -400, 'asteroid');
-
-        this.asteroid1hit = false;
-        this.asteroid2hit = false;
-        this.asteroid3hit = false;
-        this.asteroid4hit = false;
-        this.asteroid5hit = false;
 
 
         this.spaceship1 = this.physics.add.image(400, -200, 'UFO');
@@ -195,13 +175,11 @@ class gameScene extends Phaser.Scene {
         this.angle = 4.60;
         this.racket.angle = this.racket.x/360;
 
-        
-
-        //this.physics.accelerateToObject(this.asteroid1, this.earth, 70, 300, 300);
-        // this.physics.accelerateToObject(this.asteroid2, this.earth, 70, 300, 300);
+        this.physics.accelerateToObject(this.asteroid1, this.earth, 60, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid2, this.earth, 30, 300, 300);
         // this.physics.accelerateToObject(this.asteroid3, this.earth, 70, 300, 300);
-        // this.physics.accelerateToObject(this.asteroid4, this.earth, 70, 300, 300);
-        // this.physics.accelerateToObject(this.asteroid5, this.earth, 70, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid4, this.earth, 50, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid5, this.earth, 40, 300, 300);
 
     
         this.asteroid1.setScale(0.1);
@@ -243,9 +221,9 @@ class gameScene extends Phaser.Scene {
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyShift = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
-        this.keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
     } //end of create
 
+    
    
     rotate(a) {
         // if(this.circlecentery + this.radius * Math.sin(a) < 347) {
@@ -253,42 +231,20 @@ class gameScene extends Phaser.Scene {
                 this.racket.y = (this.circlecentery + this.radius * Math.sin(a));
         }
 
-    onEvent(){
-        this.accelerate = true;
-    }
-
     earthcollision(enemyhitbox, enemy){
-        // x : (-120 -> -20)-> (1300 -> 1400)  y: (-120 -> -20) -> (740 - 840)
+            
         if (Phaser.Geom.Intersects.CircleToCircle(this.earthcircle, enemyhitbox)) {
             let explo = this.add.sprite(enemy.x, enemy.y, 'explosion');
             explo.setScale(0.75);
             setTimeout(function() {explo.destroy()}, 500);
-            this.y = Math.random();
-            console.log(this.y);
-            econtact = this.sound.add('econtact');
-            econtact.play();
-            if (this.y > 0.5){
-                enemy.y = (Math.random() * (-130 - -30) + -130);
-            }
 
-            else if(this.y <= 0.5){
-                enemy.y = (Math.random() * (760 - 860) + 760);
-            }
-            this.x = Math.random();
-            console.log(this.x);
-            if(this.x >= 0.5){
-                enemy.x =(Math.random()* (1350 - 1450) + 1350);
-            }
-
-            else if(this.x < 0.5){
-                enemy.x =(Math.random() * (-130 - -30) + -130);
-            }
-            
+            enemy.y =(Math.random() * (900 - -500) + -500);
+            enemy.x =(Math.random()* (1000 - -100) + -100);
             this.is_hit = 1;
 
             if(this.is_hit == 1) {
-                enemy.body.setVelocityX(Math.random() * (50-30) + 30);
-                enemy.body.setVelocityY(Math.random() * (50-30) + 30);
+                enemy.body.setVelocityX(0);
+                enemy.body.setVelocityY(0);
                 this.health = this.health - 1;
                 console.log("health: " + this.health);
                 //let healthBar=this.makeBar(140,200,0xe74c3c);
@@ -296,7 +252,7 @@ class gameScene extends Phaser.Scene {
                 this.is_hit = 0;
             }
 
-            if(this.health == -1000) {
+            if(this.health == 0) {
                 //switch scene
                 let earthExplo = this.add.sprite(this.earth.x, this.earth.y, 'earthExplosion');
                 earthExplo.setScale(5);
@@ -313,94 +269,24 @@ class gameScene extends Phaser.Scene {
     }
 
     racketcollision(enemyhitbox, enemy, hasbeenhit){
-        if (Phaser.Geom.Intersects.CircleToRectangle(enemyhitbox, this.racketrect) )
+        if (Phaser.Geom.Intersects.CircleToRectangle(enemyhitbox, this.racketrect) && hasbeenhit == false)
             {
 
             // enemy.setVelocityY(-1 * enemy.body.velocity.y);
             // enemy.setVelocityX(-1 * enemy.body.velocity.x);
-            console.log(hasbeenhit);
-            if(hasbeenhit == 1 && this.asteroid1hit == false){
-                enemy.setVelocityY(-1 * enemy.body.velocity.y);
-                enemy.setVelocityX(-1 * enemy.body.velocity.x);
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
-                this.asteroid1hit = true;
-                rcontact = this.sound.add('rcontact');
-                rcontact.play();
-                
-                console.log("Hi");
-            }
-
-            if(hasbeenhit == 2 && this.asteroid2hit == false){
-                enemy.setVelocityY(-1 * enemy.body.velocity.y);
-                enemy.setVelocityX(-1 * enemy.body.velocity.x);
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
-                this.asteroid2hit = true;
-                rcontact = this.sound.add('rcontact');
-                rcontact.play();
-            }
-
-            if(hasbeenhit == 3 && this.asteroid3hit == false){
-                enemy.setVelocityY(-1 * enemy.body.velocity.y);
-                enemy.setVelocityX(-1 * enemy.body.velocity.x);
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
-                this.asteroid3hit = true;
-                rcontact = this.sound.add('rcontact');
-                rcontact.play();
-            }
-
-            if(hasbeenhit == 4 && this.asteroid4hit == false){
-                enemy.setVelocityY(-1 * enemy.body.velocity.y);
-                enemy.setVelocityX(-1 * enemy.body.velocity.x);
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
-                this.asteroid4hit = true;
-                rcontact = this.sound.add('rcontact');
-                rcontact.play();
-            }
-
-            if(hasbeenhit == 5 && this.asteroid5hit == false){
-                enemy.setVelocityY(-1 * enemy.body.velocity.y);
-                enemy.setVelocityX(-1 * enemy.body.velocity.x);
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
-                this.asteroid5hit = true;
-                rcontact = this.sound.add('rcontact');
-                rcontact.play();
-            }
+            enemy.setVelocityY(-1 * enemy.body.velocity.y);
+            enemy.setVelocityX(-1 * enemy.body.velocity.x);
+            console.log("Hello!");
+            hasbeenhit = true;
             
-            //this.asteroid1hit = true;
 
-            // if(!this.isScored) {
-                
-            //     this.isScored = true;
-            // }   
+            if(!this.isScored) {
+                this.score+=5;
+                this.scoreText.setText( "Score: " + this.score);
+                console.log("Add 5 to Score");
+                this.isScored = true;
+            }   
         } 
-
-        if(!(Phaser.Geom.Intersects.CircleToRectangle(enemyhitbox, this.earthsquare))) {
-            this.isScored = false;
-
-            if(hasbeenhit == 1 && this.asteroid1hit == true){
-                this.asteroid1hit = false;
-            }
-
-            if(hasbeenhit == 2 && this.asteroid2hit == true){
-                this.asteroid2hit = false;
-            }
-
-            if(hasbeenhit == 3 && this.asteroid3hit == true){
-                this.asteroid3hit = false;
-            }
-
-            if(hasbeenhit == 4 && this.asteroid4hit == true){
-                this.asteroid4hit = false;
-            }
-
-            if(hasbeenhit == 5 && this.asteroid5hit == true){
-                this.asteroid5hit = false;
-            }
         
         // } else if (Phaser.Geom.Intersects.CircleToRectangle(this.asteroidcircle, this.racketrect) && this.asteroidBounceHigh)
     
@@ -415,17 +301,18 @@ class gameScene extends Phaser.Scene {
         //         this.isScored = true;
         //     }
         // }
-            
-            
+
+        if(enemy.y <= 150 && this.isScored == true) {
+            this.isScored = false;
         }
+ 
 
     }
 
     update(){
 
         this.graphics.clear();
-       // this.graphics.fillRectShape(this.racketrect);
-        //this.graphics.fillRectShape(this.earthsquare);
+        this.graphics.fillRectShape(this.racketrect);
 
         this.racketrect.x = this.racket.x - 10;
         this.racketrect.y = this.racket.y - 5;
@@ -483,30 +370,23 @@ class gameScene extends Phaser.Scene {
             if(this.keyShift.isDown) {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 20/360 - Math.PI / 360) % (Math.PI * 2);
-                this.racket.angle = (this.racket.x - 640)/3;
             } else {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 5/360 - Math.PI / 360) % (Math.PI * 2);
-                this.racket.angle = (this.racket.x - 640)/3;
             }
         }
         if (this.cursors.right.isDown) {
             if(this.keyShift.isDown) {
                 this.rotate(this.angle);
-                this.angle = (this.angle + 20/360 + Math.PI / 360) % (Math.PI * 2);                
+                this.angle = (this.angle + 20/360 + Math.PI / 360) % (Math.PI * 2);
+
             } else {
                 this.rotate(this.angle);
                 this.angle = (this.angle + 5/360 + Math.PI / 360) % (Math.PI * 2);
-                if(this.racket.y < 350) {
-                    this.racket.angle = (this.racket.x - 640)/3;
-                    this.racketrect.angle = (this.racket.x - 640)/3;
-                } else {
-                    this.racket.angle = ((this.racket.x - 640)/3)*-1;
-                    this.racketrect.angle = ((this.racket.x - 640)/3)*-1;
-                }
+               
             }
         }
-        
+
 
         this.earthcollision(this.asteroid1circle, this.asteroid1);
         this.earthcollision(this.asteroid2circle, this.asteroid2);
@@ -514,38 +394,20 @@ class gameScene extends Phaser.Scene {
         this.earthcollision(this.asteroid4circle, this.asteroid4);
         this.earthcollision(this.asteroid5circle, this.asteroid5);
 
-        this.racketcollision(this.asteroid1circle, this.asteroid1, 1);
-        this.racketcollision(this.asteroid2circle, this.asteroid2, 2);
-        this.racketcollision(this.asteroid3circle, this.asteroid3, 3);
-        this.racketcollision(this.asteroid4circle, this.asteroid4, 4);
-        this.racketcollision(this.asteroid5circle, this.asteroid5, 5);
-        
-        if(this.Wave1 == false){
-        this.WaveText = this.add.text(this.earth.x- 40, this.earth.y - 300, "WAVE 1", 
-        {color: '#f00', fontSize: '30px', fontFamily: 'monoSpace'});
-        }        
-        
-        this.Wave1 = true;
-        if (this.Wave1 == true){
-
-            if(this.score >= 5){
-            this.WaveText.destroy()
-            }
-            this.physics.accelerateToObject(this.asteroid1, this.earth, 50, 300, 300);
-            if (this.score > 20){
-
-                this.physics.accelerateToObject(this.asteroid2, this.earth, 50, 300, 300);
-            }
-            if(this.score > 40){
-                this.physics.accelerateToObject(this.asteroid3, this.earth, 50, 300, 300);
-            }
-            // if(this.score > 70){
-            //     this.physics.accelerateToObject(this.asteroid4, this.earth, 50, 300, 300);
-            // }
-
-        }
+        console.log(this.asteroid1hit);
+        this.racketcollision(this.asteroid1circle, this.asteroid1, this.asteroid1hit);
+        this.racketcollision(this.asteroid2circle, this.asteroid2, this.asteroid2hit);
+        this.racketcollision(this.asteroid3circle, this.asteroid3, this.asteroid3hit);
+        this.racketcollision(this.asteroid4circle, this.asteroid4, this.asteroid4hit);
+        this.racketcollision(this.asteroid5circle, this.asteroid5, this.asteroid5hit);
 
         
+
+        this.physics.accelerateToObject(this.asteroid1, this.earth, 40, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid2, this.earth, 40, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid3, this.earth, 40, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid4, this.earth, 40, 300, 300);
+        // this.physics.accelerateToObject(this.asteroid5, this.earth, 40, 300, 300);
         
 
         if(this.keyA.isDown) {
@@ -563,83 +425,13 @@ class gameScene extends Phaser.Scene {
         if(this.keyShift.isDown) {
             console.log('Shift key pressed')
         }
-        
-        this.clickButton = this.add.text(1150, 10, 'PAUSE', {  font: '25px Arial', fill: '#0f0' })
-        .setInteractive()
-      .on('pointerup', () => {
-          this.scene.pause('gameScene');
-          this.scene.launch('pauseMenu')
-
-            
-        
-        
-    });
         //console.log(this.angle);
         // console.log(this.asteroid1.x);
         // console.log(this.asteroid1.y);
     } //end of update
 } //end of GameScene
 
-class pauseMenu extends Phaser.Scene {
-    constructor() {
-        super({key: 'pauseMenu'})
-    }
-    preload() {
-        this.load.image('background', 'img/background.jpg');
-    }
-    makeBar(x, y,color) {
-        //draw the bar
-        let bar = this.add.graphics();
 
-        //color the bar
-        bar.fillStyle(color, 1);
-
-        //fill the bar with a rectangle
-        bar.fillRect(0, 0, 400, 100);
-        
-        //position the bar
-        bar.x = x;
-        bar.y = y;
-
-        //return the bar
-        return bar;
-    }
-
-    create() {
-        
-
-        // background
-        this.healthBar = this.makeBar(1000 , 0, 'background');
-    
-    this.clickButton = this.add.text(625, 350, 'RESUME!', { font: '25px Arial', fill: '#0f0' })
-      .setInteractive()
-      .on('pointerover', () => this.enterButtonHoverState() )
-      .on('pointerout', () => this.enterButtonRestState() )
-      .on('pointerdown', () => this.enterButtonActiveState() )
-      .on('pointerup', () => {
-        this.enterButtonHoverState();
-        
-
-        this.scene.stop();
-        this.scene.resume('gameScene');
-                
-        console.log('Change Scene to game');
-    });
-
-    }
-    enterButtonHoverState() {
-        this.clickButton.setStyle({ fill: '#ff0' });
-    }
-
-    enterButtonRestState() {
-        this.clickButton.setStyle({ fill: '#0f0' });
-    }
-
-    enterButtonActiveState() {
-        this.clickButton.setStyle({ fill: '#0ff' });
-    }
-
-}
 
 class endMenu extends Phaser.Scene {
     constructor() {
@@ -655,16 +447,12 @@ class endMenu extends Phaser.Scene {
         // background
         let bg = this.add.sprite(0, 0, 'background');
 
-        gamemusic.stop();
-        menumusic = this.sound.add('menumusic');
-        menumusic.play();
-
         // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
 
-    this.add.text(450, 50, 'GAME OVER', { font: '50px Arial', align: 'center' });
+    this.add.text(45, 50, 'GAME OVER', { font: '50px Arial', align: 'center' });
 
-    this.clickButton = this.add.text(575, 350, 'PLAY AGAIN!', { font: '25px Arial',fill: '#0f0' })
+    this.clickButton = this.add.text(260, 200, 'PLAY AGAIN!', { fill: '#0f0' })
       .setInteractive()
       .on('pointerover', () => this.enterButtonHoverState() )
       .on('pointerout', () => this.enterButtonRestState() )
@@ -693,10 +481,9 @@ class endMenu extends Phaser.Scene {
 //our game configuration
 let config = {
     type: Phaser.AUTO, //Phaser will decide how to render our game (WebGL or Canvas)
-    
     width: 1280, // game width
     height: 720, // game height
-    scene: [titleScene, gameScene, endMenu, pauseMenu], // our newly created scene
+    scene: [titleScene, gameScene, endMenu], // our newly created scene
     parent: 'main-game',
     physics: {
         default: 'arcade',
