@@ -33,19 +33,31 @@ class titleScene extends Phaser.Scene {
     
         this.add.text(380, 50, 'APOCALYPSE BOUNCE', { font: '50px Arial', align: 'center' });
     
-        this.clickButton = this.add.text(200, 550, 'Controls', {font: '25px Arial', fill:'#0f0'})
+        this.clickButton2 = this.add.text(600, 280, 'CONTROLS', {font: '25px Arial', fill:'#0f0'})
         .setInteractive()
-        .on('pointerover', () => this.enterButtonHoverState() )
-        .on('pointerout', () => this.enterButtonRestState() )
-        .on('pointerdown', () => this.enterButtonActiveState() )
+        .on('pointerover', () => this.enterButtonHoverState2() )
+        .on('pointerout', () => this.enterButtonRestState2() )
+        .on('pointerdown', () => this.enterButtonActiveState2() )
         .on('pointerup', () => {
-            this.enterButtonHoverState();
+            this.enterButtonHoverState2();
             this.scene.start('ControlsScreen');
 
         });
 
 
-        this.clickButton = this.add.text(600, 350, 'START!', { font: '25px Arial', fill: '#0f0' })
+        this.clickButton4 = this.add.text(600, 310, 'ABOUT', {font: '25px Arial', fill:'#0f0'})
+        .setInteractive()
+        .on('pointerover', () => this.enterButtonHoverState4() )
+        .on('pointerout', () => this.enterButtonRestState4() )
+        .on('pointerdown', () => this.enterButtonActiveState4() )
+        .on('pointerup', () => {
+            this.enterButtonHoverState4();
+            this.scene.start('AboutScreen');
+
+        });
+
+
+        this.clickButton = this.add.text(600, 250, 'START', { font: '25px Arial', fill: '#0f0' })
           .setInteractive()
           .on('pointerover', () => this.enterButtonHoverState() )
           .on('pointerout', () => this.enterButtonRestState() )
@@ -69,6 +81,30 @@ class titleScene extends Phaser.Scene {
     
       enterButtonActiveState() {
         this.clickButton.setStyle({ fill: '#0ff' });
+      }
+
+      enterButtonHoverState2() {
+        this.clickButton2.setStyle({ fill: '#ff0' });
+      }
+    
+      enterButtonRestState2() {
+        this.clickButton2.setStyle({ fill: '#0f0' });
+      }
+    
+      enterButtonActiveState2() {
+        this.clickButton2.setStyle({ fill: '#0ff' });
+      }
+
+      enterButtonHoverState4() {
+        this.clickButton4.setStyle({ fill: '#ff0' });
+      }
+    
+      enterButtonRestState4() {
+        this.clickButton4.setStyle({ fill: '#0f0' });
+      }
+    
+      enterButtonActiveState4() {
+        this.clickButton4.setStyle({ fill: '#0ff' });
       }
 
 }
@@ -1058,7 +1094,7 @@ class endMenu extends Phaser.Scene {
     }
 }
 
-class endMenu extends Phaser.Scene {
+class ControlsMenu extends Phaser.Scene {
     constructor() {
         super({key: 'ControlsScreen'});
     }
@@ -1070,11 +1106,83 @@ class endMenu extends Phaser.Scene {
         // background
         let bg = this.add.sprite(0, 0, 'background');
 
+        this.ControlText = this.add.text(50, 50, "Controls: Use the Left arrow key to move the racket \n Counter Clockwise and right to move it Clockwise. \n Use the Shift key while using either \n left or right to sprint!",
+        {color: '#f00', fontSize: '30px', fontFamily: 'monoSpace'});
         // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
 
+        this.clickButton3 = this.add.text(200, 550, 'Back', {font: '25px Arial', fill:'#0f0'})
+        .setInteractive()
+        .on('pointerover', () => this.enterButtonHoverState3() )
+        .on('pointerout', () => this.enterButtonRestState3() )
+        .on('pointerdown', () => this.enterButtonActiveState3() )
+        .on('pointerup', () => {
+            this.enterButtonHoverState3();
+            this.scene.start('titleScene');
+
+        });
     }
-}
+
+        enterButtonHoverState3(){
+            this.clickButton3.setStyle({ fill: '#ff0' });
+          }
+        
+          enterButtonRestState3() {
+            this.clickButton3.setStyle({ fill: '#0f0' });
+          }
+        
+          enterButtonActiveState3() {
+            this.clickButton3.setStyle({ fill: '#0ff' });
+          }
+    
+         
+    }
+
+    class AboutScreen extends Phaser.Scene {
+        constructor() {
+            super({key: 'AboutScreen'});
+        }
+
+        preload() {
+            this.load.image('background', 'img/background.jpg');
+        }
+
+        create() {
+            // background
+            let bg = this.add.sprite(0, 0, 'background');
+
+            this.AboutText = this.add.text(50, 50, " The Earth is in imminent danger.\n Countless asteroids, bombs, and evil alien\n invaders are trying to destroy the planet \n and end all life as we know it. \n It is your job as Earth’s final line of defense \n with a giant Tennis racket to bounce away all of the \n objects and invaders to keep Earth’s \n health from dropping to zero. ",
+            {color: '#f00', fontSize: '30px', fontFamily: 'monoSpace'});
+            // change origin to the top-left of the sprite
+            bg.setOrigin(0, 0);
+    
+            this.clickButton3 = this.add.text(200, 550, 'Back', {font: '25px Arial', fill:'#0f0'})
+            .setInteractive()
+            .on('pointerover', () => this.enterButtonHoverState3() )
+            .on('pointerout', () => this.enterButtonRestState3() )
+            .on('pointerdown', () => this.enterButtonActiveState3() )
+            .on('pointerup', () => {
+                this.enterButtonHoverState3();
+                this.scene.start('titleScene');
+    
+            });
+        }
+    
+            enterButtonHoverState3(){
+                this.clickButton3.setStyle({ fill: '#ff0' });
+              }
+            
+              enterButtonRestState3() {
+                this.clickButton3.setStyle({ fill: '#0f0' });
+              }
+            
+              enterButtonActiveState3() {
+                this.clickButton3.setStyle({ fill: '#0ff' });
+              }
+
+        }
+
+
 
 //our game configuration
 let config = {
@@ -1082,7 +1190,7 @@ let config = {
     
     width: 1280, // game width
     height: 720, // game height
-    scene: [titleScene, gameScene, endMenu, pauseMenu], // our newly created scene
+    scene: [titleScene, gameScene, endMenu, pauseMenu, ControlsMenu, AboutScreen], // our newly created scene
     parent: 'main-game',
     physics: {
         default: 'arcade',
