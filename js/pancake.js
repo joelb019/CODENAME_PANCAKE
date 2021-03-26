@@ -613,11 +613,11 @@ class gameScene extends Phaser.Scene {
             if(this.keyShift.isDown) {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 20/360 - Math.PI / 360) % (Math.PI * 2);
-               // this.racket.angle = (this.racket.x - 640)/3;
+                this.racket.angle = (this.racket.x - 640)/3;
             } else {
                 this.rotate(this.angle);
                 this.angle = (this.angle - 5/360 - Math.PI / 360) % (Math.PI * 2);
-               // this.racket.angle = (this.racket.x - 640)/3;
+                this.racket.angle = (this.racket.x - 640)/3;
             }
         }
         if (this.cursors.right.isDown) {
@@ -628,11 +628,11 @@ class gameScene extends Phaser.Scene {
                 this.rotate(this.angle);
                 this.angle = (this.angle + 5/360 + Math.PI / 360) % (Math.PI * 2);
                 if(this.racket.y < 350) {
-                   // this.racket.angle = (this.racket.x - 640)/3;
-                   // this.racketrect.angle = (this.racket.x - 640)/3;
+                    this.racket.angle = (this.racket.x - 640)/3;
+                    this.racketrect.angle = (this.racket.x - 640)/3;
                 } else {
-                   // this.racket.angle = ((this.racket.x - 640)/3)*-1;
-                   // this.racketrect.angle = ((this.racket.x - 640)/3)*-1;
+                    this.racket.angle = ((this.racket.x - 640)/3)*-1;
+                    this.racketrect.angle = ((this.racket.x - 640)/3)*-1;
                 }
             }
         }
@@ -921,7 +921,25 @@ if(this.Wave6 == true){
             console.log('Shift key pressed')
         }
         
+<<<<<<< HEAD
        
+=======
+        this.clickButton = this.add.text(1150, 10, 'PAUSE', {  font: '25px Arial', fill: '#0f0' })
+        .setInteractive()
+      .on('pointerup', () => {
+        
+        econtact.pause();
+        gamemusic.pause();
+        
+        //PUT PAUSE MUSIC HERE
+          this.scene.pause('gameScene');
+          this.scene.launch('pauseMenu')
+
+            
+        
+        
+    });
+>>>>>>> JS-gameplay
         //console.log(this.angle);
         // console.log(this.asteroid1.x);
         // console.log(this.asteroid1.y);
@@ -954,6 +972,8 @@ class pauseMenu extends Phaser.Scene {
     }
 
     create() {
+        menumusic = this.sound.add('menumusic');
+        menumusic.play();
         
 
         // background
@@ -967,9 +987,15 @@ class pauseMenu extends Phaser.Scene {
       .on('pointerup', () => {
         this.enterButtonHoverState();
         
-
+        menumusic.stop();
+        econtact.resume();
+        gamemusic.resume();
         this.scene.stop();
+        
+        
+        //STOP PAUSE MUSIC
         this.scene.resume('gameScene');
+
                 
         console.log('Change Scene to game');
     });
