@@ -71,13 +71,12 @@ class gameScene extends Phaser.Scene {
         this.cursor = new Phaser.Math.Vector2();
         this.racketSpeed = 0.1;
         this.is_hit = 0;
-        this.health = 5;
+        this.health = 10;
         this.score = 0;
         this.isScored = false;
         this.bounced = false;
         this.racketSpeedUp = false;
         this.asteroidBounceHigh = false;
-        this.Wave1 = false;
         this.keyA;
         this.keyS;
         this.keyD;
@@ -135,6 +134,13 @@ class gameScene extends Phaser.Scene {
         gamemusic = this.sound.add('InGame');
         gamemusic.play();
 
+        this.Wave1 = false;
+        this.Wave2 = false;
+        this.Wave3 = false;
+        this.Wave4 = false;
+        this.Wave5 = false;
+        this.Wave6 = false;
+
         // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
 
@@ -144,6 +150,17 @@ class gameScene extends Phaser.Scene {
         this.racket = this.physics.add.image(this.earth.x, this.earth.y - 200, 'racket');
         this.racketrect = new Phaser.Geom.Rectangle(this.racket.x -5, this.racket.y - 10, 80, 20);
         this.earthsquare = new Phaser.Geom.Rectangle(this.earth.x - 220, this.earth.y - 200, 500, 420);
+
+        this.clickButton = this.add.text(1150, 10, 'PAUSE', {  font: '25px Arial', fill: '#0f0' })
+        .setInteractive()
+      .on('pointerup', () => {
+          this.scene.pause('gameScene');
+          this.scene.launch('pauseMenu')
+
+            
+        
+        
+    });
 
         this.asteroid1 = this.physics.add.image(400, -100, 'asteroid');
         this.asteroid2 = this.physics.add.image(1300, 900, 'asteroid');
@@ -164,11 +181,23 @@ class gameScene extends Phaser.Scene {
         this.spaceship4 = this.physics.add.image(400, -200, 'UFO');
         this.spaceship5 = this.physics.add.image(400, -200, 'UFO');
 
+        this.spaceship1hit = false;
+        this.spaceship2hit = false;
+        this.spaceship3hit = false;
+        this.spaceship4hit = false;
+        this.spaceship5hit = false;
+
         this.bomb1 = this.physics.add.image(400, -300, 'nuke');
         this.bomb2 = this.physics.add.image(400, -300, 'nuke');
         this.bomb3 = this.physics.add.image(400, -300, 'nuke');
         this.bomb4 = this.physics.add.image(400, -300, 'nuke');
         this.bomb5 = this.physics.add.image(400, -300, 'nuke');
+
+        this.bomb1hit = false;
+        this.bomb2hit = false;
+        this.bomb3hit = false;
+        this.bomb4hit = false;
+        this.bomb5hit = false;
 
         this.asteroid1circle = new Phaser.Geom.Circle(this.asteroid1.x, this.asteroid1.y, 30);
         this.asteroid2circle = new Phaser.Geom.Circle(this.asteroid2.x, this.asteroid2.y, 30);
@@ -227,7 +256,7 @@ class gameScene extends Phaser.Scene {
 
         //this.asteroid.setCollideWorldBounds(true);
 
-        this.health = 5;
+        this.health = 10;
 
         this.healthBar = this.makeBar(10 , this.sys.game.config.height - 50, 0xe74c3c);
         this.setValue(this.healthBar, this.health*20);
@@ -246,6 +275,37 @@ class gameScene extends Phaser.Scene {
         this.keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
     } //end of create
 
+    resetenemyposition(enemy){
+
+        enemy.body.velocity.x = 0;
+        enemy.body.velocity.y = 0;
+
+        this.y = Math.random();
+
+        if (this.y > 0.5){
+            enemy.y = (Math.random() * (-160 - -60) + -160);
+        }
+
+        else if(this.y <= 0.5){
+            enemy.y = (Math.random() * (790 - 890) + 790);
+        }
+
+        this.x = Math.random();
+
+        if(this.x >= 0.5){
+            enemy.x =(Math.random()* (1450 - 1550) + 1450);
+        }
+
+        else if(this.x < 0.5){
+            enemy.x =(Math.random() * (-160 - -60) + -160);
+        }
+       
+        // this.asteroid1 = this.physics.add.image(400, -100, 'asteroid');
+        // this.asteroid2 = this.physics.add.image(1300, 900, 'asteroid');
+        // this.asteroid3 = this.physics.add.image(-500, -200, 'asteroid');
+        // this.asteroid4 = this.physics.add.image(600, -300, 'asteroid');
+        // this.asteroid5 = this.physics.add.image(100, -400, 'asteroid');
+    }
    
     rotate(a) {
         // if(this.circlecentery + this.radius * Math.sin(a) < 347) {
@@ -253,9 +313,6 @@ class gameScene extends Phaser.Scene {
                 this.racket.y = (this.circlecentery + this.radius * Math.sin(a));
         }
 
-    onEvent(){
-        this.accelerate = true;
-    }
 
     earthcollision(enemyhitbox, enemy){
         // x : (-120 -> -20)-> (1300 -> 1400)  y: (-120 -> -20) -> (740 - 840)
@@ -264,7 +321,6 @@ class gameScene extends Phaser.Scene {
             explo.setScale(0.75);
             setTimeout(function() {explo.destroy()}, 500);
             this.y = Math.random();
-            console.log(this.y);
             econtact = this.sound.add('econtact');
             econtact.play();
             if (this.y > 0.5){
@@ -296,7 +352,7 @@ class gameScene extends Phaser.Scene {
                 this.is_hit = 0;
             }
 
-            if(this.health == 0) {
+            if(this.health == -1000) {
                 //switch scene
                 let earthExplo = this.add.sprite(this.earth.x, this.earth.y, 'earthExplosion');
                 earthExplo.setScale(5);
@@ -312,6 +368,15 @@ class gameScene extends Phaser.Scene {
         }
     }
 
+    hitaction(enemy){
+        enemy.setVelocityY(-1 * enemy.body.velocity.y);
+        enemy.setVelocityX(-1 * enemy.body.velocity.x);
+        this.score+=5;
+        this.scoreText.setText( "Score: " + this.score);
+        rcontact = this.sound.add('rcontact');
+        rcontact.play();
+    }
+
     racketcollision(enemyhitbox, enemy, hasbeenhit){
         if (Phaser.Geom.Intersects.CircleToRectangle(enemyhitbox, this.racketrect) )
             {
@@ -320,55 +385,78 @@ class gameScene extends Phaser.Scene {
             // enemy.setVelocityX(-1 * enemy.body.velocity.x);
             console.log(hasbeenhit);
             if(hasbeenhit == 1 && this.asteroid1hit == false){
-                enemy.setVelocityY(-1 * enemy.body.velocity.y);
-                enemy.setVelocityX(-1 * enemy.body.velocity.x);
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid1hit = true;
-                rcontact = this.sound.add('rcontact');
-                rcontact.play();
-                
-                console.log("Hi");
+                this.hitaction(this.asteroid1);
             }
 
             if(hasbeenhit == 2 && this.asteroid2hit == false){
-                enemy.setVelocityY(-1 * enemy.body.velocity.y);
-                enemy.setVelocityX(-1 * enemy.body.velocity.x);
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid2hit = true;
-                rcontact = this.sound.add('rcontact');
-                rcontact.play();
+                this.hitaction(this.asteroid2);
             }
 
             if(hasbeenhit == 3 && this.asteroid3hit == false){
-                enemy.setVelocityY(-1 * enemy.body.velocity.y);
-                enemy.setVelocityX(-1 * enemy.body.velocity.x);
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid3hit = true;
-                rcontact = this.sound.add('rcontact');
-                rcontact.play();
+                this.hitaction(this.asteroid3);
             }
 
             if(hasbeenhit == 4 && this.asteroid4hit == false){
-                enemy.setVelocityY(-1 * enemy.body.velocity.y);
-                enemy.setVelocityX(-1 * enemy.body.velocity.x);
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
-                this.asteroid4hit = true;
-                rcontact = this.sound.add('rcontact');
-                rcontact.play();
+               this.asteroid4hit = true;
+               this.hitaction(this.asteroid4);
             }
 
             if(hasbeenhit == 5 && this.asteroid5hit == false){
-                enemy.setVelocityY(-1 * enemy.body.velocity.y);
-                enemy.setVelocityX(-1 * enemy.body.velocity.x);
-                this.score+=5;
-                this.scoreText.setText( "Score: " + this.score);
                 this.asteroid5hit = true;
-                rcontact = this.sound.add('rcontact');
-                rcontact.play();
+                this.hitaction(this.asteroid5);
+            }
+
+            if(hasbeenhit == 6 && this.spaceship1hit == false){
+                this.spaceship1hit = true;
+                this.hitaction(this.spaceship1);
+            }
+
+            if(hasbeenhit == 7 && this.spaceship2hit == false){
+                this.spaceship2hit = true;
+                this.hitaction(this.spaceship2);
+            }
+
+            if(hasbeenhit == 8 && this.spaceship3hit == false){
+                this.spaceship3hit = true;
+                this.hitaction(this.spaceship3);
+            }
+
+            if(hasbeenhit == 9 && this.spaceship4hit == false){
+                this.spaceship4hit = true;
+                this.hitaction(this.spaceship4);
+            }
+
+            if(hasbeenhit == 10 && this.spaceship5hit == false){
+                this.spaceship5hit = true;
+                this.hitaction(this.spaceship5);
+            }
+
+            if(hasbeenhit == 11 && this. bomb1hit == false){
+                this.bomb1hit = true;
+                this.hitaction(this.bomb1);
+            }
+
+            if(hasbeenhit == 12 && this.bomb2hit == false){
+                this.bomb2hit = true;
+                this.hitaction(this.bomb2);
+            }
+
+            if(hasbeenhit == 13 && this.bomb3hit == false){
+                this.bomb3hit = true;
+                this.hitaction(this.bomb3);
+            }
+
+            if(hasbeenhit == 14 && this.bomb4hit == false){
+                this.bomb4hit = true;
+                this.hitaction(this.bomb4);
+            }
+
+            if(hasbeenhit == 15 && this.bomb5hit == false){
+                this.bomb5hit = true;
+                this.hitaction(this.bomb5);
             }
             
             //this.asteroid1hit = true;
@@ -401,6 +489,48 @@ class gameScene extends Phaser.Scene {
             if(hasbeenhit == 5 && this.asteroid5hit == true){
                 this.asteroid5hit = false;
             }
+
+            if(hasbeenhit == 6 && this.spaceship1hit == true){
+                this.spaceship1hit = false;
+            }
+
+            if(hasbeenhit == 7 && this.spaceship2hit == true){
+                this.spaceship2hit = false;
+            }
+
+            if(hasbeenhit == 8 && this.spaceship3hit == true){
+                this.spaceship3hit = false;
+            }
+
+            if(hasbeenhit == 9 && this.spaceship4hit == true){
+                this.spaceship4hit = false;
+            }
+
+            if(hasbeenhit == 10 && this.spaceship5hit == true){
+                this.spaceship5hit = false;
+            }
+
+            if(hasbeenhit == 11 && this. bomb1hit == true){
+                this.bomb1hit = false;
+            }
+
+            if(hasbeenhit == 12 && this.bomb2hit == true){
+                this.bomb2hit = false;
+            }
+
+            if(hasbeenhit == 13 && this.bomb3hit == true){
+                this.bomb3hit = false;
+            }
+
+            if(hasbeenhit == 14 && this.bomb4hit == true){
+                this.bomb4hit = false;
+            }
+
+            if(hasbeenhit == 15 && this.bomb5hit == true){
+                this.bomb5hit = false;
+            }
+
+
         
         // } else if (Phaser.Geom.Intersects.CircleToRectangle(this.asteroidcircle, this.racketrect) && this.asteroidBounceHigh)
     
@@ -514,39 +644,266 @@ class gameScene extends Phaser.Scene {
         this.earthcollision(this.asteroid4circle, this.asteroid4);
         this.earthcollision(this.asteroid5circle, this.asteroid5);
 
+        this.earthcollision(this.spaceship1circle, this.spaceship1);
+        this.earthcollision(this.spaceship2circle, this.spaceship2);
+        this.earthcollision(this.spaceship3circle, this.spaceship3);
+        this.earthcollision(this.spaceship4circle, this.spaceship4);
+        this.earthcollision(this.spaceship5circle, this.spaceship5);
+        
+        this.earthcollision(this.bomb1circle, this.bomb1);
+        this.earthcollision(this.bomb2circle, this.bomb2);
+        this.earthcollision(this.bomb3circle, this.bomb3);
+        this.earthcollision(this.bomb4circle, this.bomb4);
+        this.earthcollision(this.bomb5circle, this.bomb5);
+
         this.racketcollision(this.asteroid1circle, this.asteroid1, 1);
         this.racketcollision(this.asteroid2circle, this.asteroid2, 2);
         this.racketcollision(this.asteroid3circle, this.asteroid3, 3);
         this.racketcollision(this.asteroid4circle, this.asteroid4, 4);
         this.racketcollision(this.asteroid5circle, this.asteroid5, 5);
+
         
-        if(this.Wave1 == false){
+        this.racketcollision(this.spaceship1circle, this.spaceship1, 6);
+        this.racketcollision(this.spaceship2circle, this.spaceship2, 7);
+        this.racketcollision(this.spaceship3circle, this.spaceship3, 8);
+        this.racketcollision(this.spaceship4circle, this.spaceship4, 9);
+        this.racketcollision(this.spaceship5circle, this.spaceship5, 10);
+        
+        this.racketcollision(this.bomb1circle, this.bomb1, 11);
+        this.racketcollision(this.bomb2circle, this.bomb2, 12);
+        this.racketcollision(this.bomb3circle, this.bomb3, 13);
+        this.racketcollision(this.bomb4circle, this.bomb4, 14);
+        this.racketcollision(this.bomb5circle, this.bomb5, 15);
+        
+        if(this.Wave1 == false && this.Wave2 == false && this.Wave3 == false && this.Wave4 == false && this.Wave5 == false){
         this.WaveText = this.add.text(this.earth.x- 40, this.earth.y - 300, "WAVE 1", 
         {color: '#f00', fontSize: '30px', fontFamily: 'monoSpace'});
+        this.Wave1 = true;
         }        
         
-        this.Wave1 = true;
+        
+
         if (this.Wave1 == true){
 
             if(this.score >= 5){
-            this.WaveText.destroy()
+            this.WaveText.destroy();
             }
             this.physics.accelerateToObject(this.asteroid1, this.earth, 50, 300, 300);
-            if (this.score > 20){
-
-                this.physics.accelerateToObject(this.asteroid2, this.earth, 50, 300, 300);
+            if (this.score >= 10){
+            this.physics.accelerateToObject(this.asteroid2, this.earth, 50, 300, 300);
             }
-            if(this.score > 40){
+            if(this.score >= 15){
                 this.physics.accelerateToObject(this.asteroid3, this.earth, 50, 300, 300);
             }
-            // if(this.score > 70){
-            //     this.physics.accelerateToObject(this.asteroid4, this.earth, 50, 300, 300);
-            // }
+            if(this.score == 50){
+                this.Wave2 = true;
+                this.resetenemyposition(this.asteroid1);
+                this.resetenemyposition(this.asteroid2);
+                this.resetenemyposition(this.asteroid3);
+                if(this.Wave1 == true){
+                    this.WaveText2 = this.add.text(this.earth.x- 40, this.earth.y - 300, "WAVE 2", 
+                    {color: '#f00', fontSize: '30px', fontFamily: 'monoSpace'});
+                }
+            }
 
         }
 
-        
-        
+
+
+        if (this.Wave2 == true){
+            this.Wave1 = false;
+            this.physics.accelerateToObject(this.asteroid1, this.earth, 50, 300, 300);
+            if(this.score >= 55){
+            this.WaveText2.destroy();
+            }
+            if(this.score == 65){
+                this.resetenemyposition(this.asteroid2);
+            }
+            if(this.score >= 70){
+                this.physics.accelerateToObject(this.asteroid2, this.earth, 50, 300, 300);
+            }
+            if(this.score == 80){
+                this.resetenemyposition(this.asteroid3);
+            }
+            if(this.score >= 85){
+                this.physics.accelerateToObject(this.asteroid3, this.earth, 50, 300, 300);
+            }
+            if(this.score == 95){
+                this.resetenemyposition(this.spaceship1);
+            }
+            if(this.score >= 100){
+                this.physics.accelerateToObject(this.spaceship1, this.earth, 50, 300, 300);
+            }
+            if(this.score == 150){
+                this.Wave3 = true;
+                this.resetenemyposition(this.asteroid1);
+                this.resetenemyposition(this.asteroid2);
+                this.resetenemyposition(this.asteroid3);
+                this.resetenemyposition(this.spaceship1);
+                if(this.Wave2 == true){
+                    this.WaveText3 = this.add.text(this.earth.x- 40, this.earth.y - 300, "WAVE 3", 
+                    {color: '#f00', fontSize: '30px', fontFamily: 'monoSpace'});
+            }
+            
+        }
+    }
+
+        if(this.Wave3 == true){
+            this.Wave2 = false;
+            this.physics.accelerateToObject(this.asteroid1, this.earth, 50, 300, 300);
+            if(this.score >= 155){
+                this.WaveText3.destroy();
+            if(this.score == 165){
+                this.resetenemyposition(this.asteroid2);
+            }
+            if(this.score >= 170){
+                this.physics.accelerateToObject(this.asteroid2, this.earth, 50, 300, 300);
+            }
+            if(this.score == 180){
+                this.resetenemyposition(this.asteroid3);
+            }
+            if(this.score >= 185){
+                this.physics.accelerateToObject(this.asteroid3, this.earth, 50, 300, 300);
+            }
+            if(this.score == 195){
+                this.resetenemyposition(this.spaceship1);
+            }
+            if(this.score >= 200){
+                this.physics.accelerateToObject(this.spaceship1, this.earth, 50, 300, 300);
+            }
+            if(this.score == 210){
+                this.resetenemyposition(this.spaceship2);
+            }
+            if(this.score >= 215){
+                this.physics.accelerateToObject(this.spaceship2, this.earth, 50, 300, 300);
+            }
+            if(this.score == 280){
+                this.Wave4 = true;
+                this.resetenemyposition(this.asteroid1);
+                this.resetenemyposition(this.asteroid2);
+                this.resetenemyposition(this.asteroid3);
+                this.resetenemyposition(this.spaceship1);
+                this.resetenemyposition(this.spaceship2);
+                if(this.Wave3 == true){
+                    this.WaveText4 = this.add.text(this.earth.x- 40, this.earth.y - 300, "WAVE 4", 
+                    {color: '#f00', fontSize: '30px', fontFamily: 'monoSpace'});
+            }
+            }
+        }
+    }   
+
+        if(this.Wave4 == true){
+            this.Wave3 = false;
+            this.physics.accelerateToObject(this.asteroid1, this.earth, 50, 300, 300);
+            if(this.score >= 285){
+                this.WaveText4.destroy();
+            if(this.score == 295){
+                this.resetenemyposition(this.asteroid2);
+            }
+            if(this.score >= 300){
+                this.physics.accelerateToObject(this.asteroid2, this.earth, 50, 300, 300);
+            }
+            if(this.score == 310){
+                this.resetenemyposition(this.asteroid3);
+            }
+            if(this.score >= 315){
+                this.physics.accelerateToObject(this.asteroid3, this.earth, 50, 300, 300);
+            }
+            if(this.score == 325){
+                this.resetenemyposition(this.spaceship1);
+            }
+            if(this.score >= 330){
+                this.physics.accelerateToObject(this.spaceship1, this.earth, 50, 300, 300);
+            }
+            if(this.score == 340){
+                this.resetenemyposition(this.spaceship2);
+            }
+            if(this.score >= 345){
+                this.physics.accelerateToObject(this.spaceship2, this.earth, 50, 300, 300);
+            }
+            if(this.score == 355){
+                this.resetenemyposition(this.spaceship3);
+            }
+            if(this.score >= 360){
+                this.physics.accelerateToObject(this.spaceship3, this.earth, 50, 300, 300);
+            }
+            if(this.score == 450){
+                this.Wave5 = true;
+                this.resetenemyposition(this.asteroid1);
+                this.resetenemyposition(this.asteroid2);
+                this.resetenemyposition(this.asteroid3);
+                this.resetenemyposition(this.spaceship1);
+                this.resetenemyposition(this.spaceship2);
+                this.resetenemyposition(this.spaceship3);
+                if(this.Wave4 == true){
+                    this.WaveText5 = this.add.text(this.earth.x- 40, this.earth.y - 300, "WAVE 5", 
+                    {color: '#f00', fontSize: '30px', fontFamily: 'monoSpace'});
+            }
+        }
+
+    }
+}
+    if(this.Wave5 == true){
+        this.Wave4 = false;
+        this.physics.accelerateToObject(this.asteroid1, this.earth, 50, 300, 300);
+            if(this.score >= 455){
+                this.WaveText5.destroy();
+            if(this.score == 465){
+                this.resetenemyposition(this.asteroid2);
+            }
+            if(this.score >= 470){
+                this.physics.accelerateToObject(this.asteroid2, this.earth, 50, 300, 300);
+            }
+            if(this.score == 480){
+                this.resetenemyposition(this.asteroid3);
+            }
+            if(this.score >= 485){
+                this.physics.accelerateToObject(this.asteroid3, this.earth, 50, 300, 300);
+            }
+            if(this.score == 495){
+                this.resetenemyposition(this.spaceship1);
+            }
+            if(this.score >= 500){
+                this.physics.accelerateToObject(this.spaceship1, this.earth, 50, 300, 300);
+            }
+            if(this.score == 510){
+                this.resetenemyposition(this.spaceship2);
+            }
+            if(this.score >= 515){
+                this.physics.accelerateToObject(this.spaceship2, this.earth, 50, 300, 300);
+            }
+            if(this.score == 525){
+                this.resetenemyposition(this.spaceship3);
+            }
+            if(this.score >= 530){
+                this.physics.accelerateToObject(this.spaceship3, this.earth, 50, 300, 300);
+            }
+            if(this.score == 540){
+                this.resetenemyposition(this.asteroid4);
+            }
+            if(this.score == 545){
+                this.physics.accelerateToObject(this.asteroid4, this.earth, 50, 300, 300);
+            }
+            if(this.score == 600){
+                this.Wave6 = true;
+                this.resetenemyposition(this.asteroid1);
+                this.resetenemyposition(this.asteroid2);
+                this.resetenemyposition(this.asteroid3);
+                this.resetenemyposition(this.spaceship1);
+                this.resetenemyposition(this.spaceship2);
+                this.resetenemyposition(this.spaceship3);
+                this.resetenemyposition(this.asteroid4);
+                if(this.Wave5 == true) {
+                this.Beta_End = this.add.text(this.earth.x- 40, this.earth.y - 300, "You Completed the Beta!", 
+                {color: '#f00', fontSize: '30px', fontFamily: 'monoSpace'});
+                }
+            }
+    }
+}
+
+if(this.Wave6 == true){
+    this.Wave5 = false;
+}
 
         if(this.keyA.isDown) {
             console.log('A key pressed');
@@ -564,16 +921,7 @@ class gameScene extends Phaser.Scene {
             console.log('Shift key pressed')
         }
         
-        this.clickButton = this.add.text(1150, 10, 'PAUSE', {  font: '25px Arial', fill: '#0f0' })
-        .setInteractive()
-      .on('pointerup', () => {
-          this.scene.pause('gameScene');
-          this.scene.launch('pauseMenu')
-
-            
-        
-        
-    });
+       
         //console.log(this.angle);
         // console.log(this.asteroid1.x);
         // console.log(this.asteroid1.y);
