@@ -122,15 +122,14 @@ class gameScene extends Phaser.Scene {
         this.health = 10;
         this.score = 0;
         this.isScored = false;
-        this.bounced = false;
         this.racketSpeedUp = false;
-        this.asteroidBounceHigh = false;
         this.keyA;
         this.keyS;
         this.keyD;
         this.keyW;
         this.keyShift;
         this.accelerate = false
+        this.debugon = false;
 
     }
 
@@ -961,11 +960,35 @@ if(this.Wave6 == true){
         if(this.keyS.isDown) {
             console.log('S key pressed');
         } 
-        if(this.keyD.isDown) {
-            console.log('D key pressed');
-        } 
+
+        if (Phaser.Input.Keyboard.JustDown(this.keyD)){
+            if(this.debugon == false){
+             this.debugon = true;
+             this.variables = this.add.text(30, 320, "Asteroid1hit : " + this.asteroid1hit + "\n" + "Asteroid2hit : " + this.asteroid2hit + "\n" + "Asteroid3hit : " + this.asteroid3hit + "\n" + "Asteroid4hit : " + this.asteroid4hit + "\n" + "Spaceship1hit : " + this.spaceship1hit + "\n" + "Spaceship2hit : " + this.spaceship2hit + "\n" + "Spaceship3hit : " + this.spaceship3hit + "\n" + "Asteroid 1 X Velocity : " + (this.asteroid1.body.velocity.x).toFixed(2) + "\n" + "Asteroid 1 Y Velocity : " + (this.asteroid1.body.velocity.y).toFixed(2) + "\n" + "Asteroid 2 X Velocity : " + (this.asteroid2.body.velocity.x).toFixed(2) + "\n" + "Asteroid 1 Y Velocity : " + (this.asteroid2.body.velocity.y).toFixed(2) + "\n" + "Asteroid 3 X Velocity : " + (this.asteroid3.body.velocity.x).toFixed(2) + "\n" + "Asteroid 3 Y Velocity : " + (this.asteroid3.body.velocity.y).toFixed(2) + "\n" + "Asteroid 4 X Velocity : " + (this.asteroid4.body.velocity.x).toFixed(2) + "\n" + "Asteroid 4 Y Velocity : " + (this.asteroid4.body.velocity.y).toFixed(2) + "\n" + "Spaceship 1 X Velocity : " + (this.spaceship1.body.velocity.x).toFixed(2) + "\n" + "Spaceship 1 Y Velocity : " + (this.spaceship1.body.velocity.y).toFixed(2) + "\n" + "Spaceship 2 X Velocity : " + (this.spaceship2.body.velocity.x).toFixed(2) + "\n" + "Spaceship 2 Y Velocity : " + (this.spaceship2.body.velocity.y).toFixed(2) + "\n" + "Spaceship 3 X Velocity : " + (this.spaceship3.body.velocity.x).toFixed(2) + "\n" + "Spaceship 3 Y Velocity : " + (this.spaceship3.body.velocity.y).toFixed(2) + "\n");
+             this.enemyxandy = this.add.text(30,50,("Racket X : " + (this.racket.x).toFixed(2) + "\n" + "Asteroid 1 X : " + (this.asteroid1.x).toFixed(2) + "\n" + "Asteroid 1 Y : " + (this.asteroid1.y).toFixed(2) + "\n" + "Asteroid 2 X : " + (this.asteroid2.x).toFixed(2) + "\n" + "Asteroid 2 Y : " + (this.asteroid2.y).toFixed(2) + "\n" + "Asteroid 3 X : " + (this.asteroid3.x).toFixed(2) + "\n" + "Asteroid 3 Y : " + (this.asteroid3.y).toFixed(2) + "\n" + "Asteroid 4 X : " + (this.asteroid4.x).toFixed(2) + "\n" + "Asteroid 4 Y : " + (this.asteroid4.y).toFixed(2) + "\n" + "Spaceship 1 X : " + (this.spaceship1.x).toFixed(2) + "\n" + "Spaceship 1 Y : " + (this.spaceship1.y).toFixed(2) + "\n" + "Spaceship 2 X : " + (this.spaceship2.x).toFixed(2) + "\n" + "Spaceship 1 Y : " + (this.spaceship2.y).toFixed(2) + "\n" + "Spaceship 3 X : " + (this.spaceship3.x).toFixed(2) + "\n" + "Spaceship 3 Y : " + (this.spaceship3.y).toFixed(2) + "\n") ,
+            {color: '#f00', fontSize: '15px', fontFamily: 'monoSpace'});
+            }
+            else if(this.debugon == true){
+                this.enemyxandy.destroy();
+                this.variables.destroy();
+                this.debugon = false;
+            }
+        }
+
+        if(this.debugon == true){
+            this.enemyxandy.destroy();
+            this.variables.destroy();
+            this.variables = this.add.text(30, 320, "Asteroid1hit : " + this.asteroid1hit + "\n" + "Asteroid2hit : " + this.asteroid2hit + "\n" + "Asteroid3hit : " + this.asteroid3hit + "\n" + "Asteroid4hit : " + this.asteroid4hit + "\n" + "Spaceship1hit : " + this.spaceship1hit + "\n" + "Spaceship2hit : " + this.spaceship2hit + "\n" + "Spaceship3hit : " + this.spaceship3hit + "\n" + "Asteroid 1 X Velocity : " + (this.asteroid1.body.velocity.x).toFixed(2) + "\n" + "Asteroid 1 Y Velocity : " + (this.asteroid1.body.velocity.y).toFixed(2) + "\n" + "Asteroid 2 X Velocity : " + (this.asteroid2.body.velocity.x).toFixed(2) + "\n" + "Asteroid 1 Y Velocity : " + (this.asteroid2.body.velocity.y).toFixed(2) + "\n" + "Asteroid 3 X Velocity : " + (this.asteroid3.body.velocity.x).toFixed(2) + "\n" + "Asteroid 3 Y Velocity : " + (this.asteroid3.body.velocity.y).toFixed(2) + "\n" + "Asteroid 4 X Velocity : " + (this.asteroid4.body.velocity.x).toFixed(2) + "\n" + "Asteroid 4 Y Velocity : " + (this.asteroid4.body.velocity.y).toFixed(2) + "\n" + "Spaceship 1 X Velocity : " + (this.spaceship1.body.velocity.x).toFixed(2) + "\n" + "Spaceship 1 Y Velocity : " + (this.spaceship1.body.velocity.y).toFixed(2) + "\n" + "Spaceship 2 X Velocity : " + (this.spaceship2.body.velocity.x).toFixed(2) + "\n" + "Spaceship 2 Y Velocity : " + (this.spaceship2.body.velocity.y).toFixed(2) + "\n" + "Spaceship 3 X Velocity : " + (this.spaceship3.body.velocity.x).toFixed(2) + "\n" + "Spaceship 3 Y Velocity : " + (this.spaceship3.body.velocity.y).toFixed(2) + "\n");
+            this.enemyxandy = this.add.text(30,50,("Racket X : " + (this.racket.x).toFixed(2) + "\n" + "Racket Y : " + (this.racket.y).toFixed(2) + "\n" + "Asteroid 1 X : " + (this.asteroid1.x).toFixed(2) + "\n" + "Asteroid 1 Y : " + (this.asteroid1.y).toFixed(2) + "\n" + "Asteroid 2 X : " + (this.asteroid2.x).toFixed(2) + "\n" + "Asteroid 2 Y : " + (this.asteroid2.y).toFixed(2) + "\n" + "Asteroid 3 X : " + (this.asteroid3.x).toFixed(2) + "\n" + "Asteroid 3 Y : " + (this.asteroid3.y).toFixed(2) + "\n" + "Asteroid 4 X : " + (this.asteroid4.x).toFixed(2) + "\n" + "Asteroid 4 Y : " + (this.asteroid4.y).toFixed(2) + "\n" + "Spaceship 1 X : " + (this.spaceship1.x).toFixed(2) + "\n" + "Spaceship 1 Y : " + (this.spaceship1.y).toFixed(2) + "\n" + "Spaceship 2 X : " + (this.spaceship2.x).toFixed(2) + "\n" + "Spaceship 2 Y : " + (this.spaceship2.y).toFixed(2) + "\n"  + "Spaceship 3 X : " + (this.spaceship3.x).toFixed(2) + "\n" + "Spaceship 3 Y : " + (this.spaceship3.y).toFixed(2) + "\n") ,
+            {color: '#f00', fontSize: '15px', fontFamily: 'monoSpace'});
+            
+        }
+        console.log(this.debugon);
+
+        
         if(this.keyW.isDown) {
             console.log('W key pressed');
+            
         }
         if(this.keyShift.isDown) {
             console.log('Shift key pressed')
@@ -1106,7 +1129,7 @@ class ControlsMenu extends Phaser.Scene {
         // background
         let bg = this.add.sprite(0, 0, 'background');
 
-        this.ControlText = this.add.text(50, 50, "Controls: Use the Left arrow key to move the racket \n Counter Clockwise and right to move it Clockwise. \n Use the Shift key while using either \n left or right to sprint!",
+        this.ControlText = this.add.text(50, 50, "Controls: Use the Left arrow key to move the racket \n Counter Clockwise and right to move it Clockwise. \n Use the Shift key while using either \n left or right to sprint! \n To use debug mode, press the letter D.",
         {color: '#f00', fontSize: '30px', fontFamily: 'monoSpace'});
         // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
