@@ -201,6 +201,8 @@ class gameScene extends Phaser.Scene {
         this.clickButton = this.add.text(1150, 10, 'PAUSE', {  font: '25px Arial', fill: '#0f0' })
         .setInteractive()
       .on('pointerup', () => {
+          gamemusic.pause();
+          
           this.scene.pause('gameScene');
           this.scene.launch('pauseMenu')
 
@@ -1041,7 +1043,7 @@ class pauseMenu extends Phaser.Scene {
         this.enterButtonHoverState();
         
         menumusic.stop();
-        econtact.resume();
+        // econtact.resume();
         gamemusic.resume();
         this.scene.stop();
         
