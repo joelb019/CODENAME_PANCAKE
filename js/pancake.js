@@ -31,7 +31,7 @@ class titleScene extends Phaser.Scene {
             // change origin to the top-left of the sprite
         bg.setOrigin(0, 0);
     
-        this.add.text(380, 50, 'APOCALYPSE BOUNCE', { font: '50px Arial', align: 'center' });
+        this.add.text(420, 50, 'DEFLECT OR DIE', { font: '50px Arial', align: 'center' });
     
         this.clickButton2 = this.add.text(600, 280, 'CONTROLS', {font: '25px Arial', fill:'#0f0'})
         .setInteractive()
