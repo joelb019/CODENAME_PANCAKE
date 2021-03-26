@@ -33,6 +33,18 @@ class titleScene extends Phaser.Scene {
     
         this.add.text(380, 50, 'APOCALYPSE BOUNCE', { font: '50px Arial', align: 'center' });
     
+        this.clickButton = this.add.text(200, 550, 'Controls', {font: '25px Arial', fill:'#0f0'})
+        .setInteractive()
+        .on('pointerover', () => this.enterButtonHoverState() )
+        .on('pointerout', () => this.enterButtonRestState() )
+        .on('pointerdown', () => this.enterButtonActiveState() )
+        .on('pointerup', () => {
+            this.enterButtonHoverState();
+            this.scene.start('ControlsScreen');
+
+        });
+
+
         this.clickButton = this.add.text(600, 350, 'START!', { font: '25px Arial', fill: '#0f0' })
           .setInteractive()
           .on('pointerover', () => this.enterButtonHoverState() )
@@ -1043,6 +1055,24 @@ class endMenu extends Phaser.Scene {
 
     enterButtonActiveState() {
         this.clickButton.setStyle({ fill: '#0ff' });
+    }
+}
+
+class endMenu extends Phaser.Scene {
+    constructor() {
+        super({key: 'ControlsScreen'});
+    }
+    preload() {
+        this.load.image('background', 'img/background.jpg');
+    }
+
+    create() {
+        // background
+        let bg = this.add.sprite(0, 0, 'background');
+
+        // change origin to the top-left of the sprite
+        bg.setOrigin(0, 0);
+
     }
 }
 
