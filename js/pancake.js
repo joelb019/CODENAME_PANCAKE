@@ -399,7 +399,7 @@ class gameScene extends Phaser.Scene {
                 this.is_hit = 0;
             }
 
-            if(this.health == -1000) {
+            if(this.health == 0) {
                 //switch scene
                 let earthExplo = this.add.sprite(this.earth.x, this.earth.y, 'earthExplosion');
                 earthExplo.setScale(5);
