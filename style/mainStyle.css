@@ -1,0 +1,22 @@
+body {
+  background-color: dimgrey;
+}
+
+.headingDivs {
+  text-align: center;
+  border: 7px solid navy;
+  border-radius: 25px;
+  background-color: gold;
+  font-family: "Copperplate", fantasy;
+}
+
+.headings {
+  padding-top: 0px;
+}
+
+.mainCanvas {
+  padding: 5px;
+  margin: auto;
+  display: block;
+  width: 1280px;
+}

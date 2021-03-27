@@ -18,4 +18,49 @@ Michael Gublo
 William Castner
 Rueben Aguilar 
 Jimmy Littley
+<<<<<<< HEAD
 Luke Borkowski
+=======
+Luke Borkowski
+
+titleScene - Triggered when html file is first loaded
+
+gameScene - Triggered when the "Start" button is clicked or when the restart button is clicked on the endMenu scene
+
+endMenu - Triggered when the Earth runs out of health and you get a Game Over
+
+pauseMenu - Triggered when the Pause button is clicked on the gameScene
+
+ControlsMenu - Triggered when the Controls button is clicked on the titleScene
+
+AboutScreen - Triggered when the About button is clicked on the titleScene
+
+
+asteroid.png - image used for asteroid enemy
+
+background.jpg - image used for the background of the game
+
+earth.png - Earth sprite used in the game
+
+earthExplosion - sprite used when Earth runs out of health and you get a game over
+
+explosion - sprite used when enemy hits earth to indicate damage was taken
+
+nuke.png - image used for nuke enemy (not used yet but planned for later implementation)
+
+ufo.png - image sued for ufo enemy
+
+tennis.png - image used for tennis racket you control
+
+ping-pong paddle Large.png - image used for the ping pong paddle you control (not used yet but planned for later implementation)
+
+CometEarthContact.mp3 - sound used when enemy collides with Earth
+
+CometRacketContact.mp3 - sound used when enemy collides with the racket
+
+HalfHealth.mp3 - sound used to tell player they are on half health
+
+InGame.mp3 - Music used during normal gameplay
+
+MainMenu.mp3 - Music used on game over screen
+>>>>>>> develop
