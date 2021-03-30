@@ -18,9 +18,6 @@ Michael Gublo
 William Castner
 Rueben Aguilar 
 Jimmy Littley
-<<<<<<< HEAD
-Luke Borkowski
-=======
 Luke Borkowski
 
 titleScene - Triggered when html file is first loaded
@@ -63,4 +60,5 @@ HalfHealth.mp3 - sound used to tell player they are on half health
 InGame.mp3 - Music used during normal gameplay
 
 MainMenu.mp3 - Music used on game over screen
->>>>>>> develop
+
+EOL = wave number * score - health
