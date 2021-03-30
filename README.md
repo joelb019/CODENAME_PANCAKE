@@ -12,6 +12,7 @@ https://docs.google.com/document/d/13Ek3VYffR4sTGDvkG3Bqmtkfbvw7VdyvxwZMCgAPB0Y/
 
 https://app.diagrams.net/#G1xYrPvf_53k-xbayoOAUgnm4na1JXY6MI
 
+**
 Trey Barone
 Joel Bevenour
 Michael Gublo
@@ -19,6 +20,7 @@ William Castner
 Rueben Aguilar 
 Jimmy Littley
 Luke Borkowski
+**
 
 titleScene - Triggered when html file is first loaded
 
